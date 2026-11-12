@@ -2101,14 +2101,18 @@ with tab_shadowing:
             with col_loop1:
                 reps = st.selectbox("Repeticiones por turno:", options=[1, 2, 3], index=1)
             with col_loop2:
-                if st.button("▶️ Escuchar Diálogo Fluido (Sin pausas)", use_container_width=True):
-                    fluid_audio = synthesize_speech(" ".join(active_sentences), is_slow, selected_tld)
-                    st.audio(fluid_audio, format="audio/mp3", autoplay=True)
+                play_fluid = st.button("▶️ Escuchar Diálogo Fluido (Sin pausas)", use_container_width=True)
             with col_loop3:
-                if st.button("🔁 Pista Shadowing (Con pausas para repetir)", type="primary", use_container_width=True):
-                    loop_audio = synthesize_shadowing_loop(tuple(active_sentences), is_slow, selected_tld, reps)
-                    st.audio(loop_audio, format="audio/mp3", autoplay=True)
+                play_loop = st.button("🔁 Pista Shadowing (Con pausas para repetir)", type="primary", use_container_width=True)
 
+            if play_fluid:
+                fluid_audio = synthesize_speech(" ".join(active_sentences), is_slow, selected_tld)
+                st.audio(fluid_audio, format="audio/mp3", autoplay=True)
+            if play_loop:
+                loop_audio = synthesize_shadowing_loop(tuple(active_sentences), is_slow, selected_tld, reps)
+                st.audio(loop_audio, format="audio/mp3", autoplay=True)
+
+            st.markdown("<br>", unsafe_allow_html=True)
             st.markdown("### 📝 Desglose del Diálogo Turno por Turno")
             for idx, item in enumerate(lesson["sentences"], 1):
                 with st.container(border=True):
