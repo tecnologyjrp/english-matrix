@@ -264,30 +264,105 @@ if "last_exam_report" not in st.session_state:
 # ==============================================================================
 SUBJECTS = {
     "I": {"person": "1s", "plural": False, "es": "Yo", "be_pres": "am", "be_past": "was", "have": "have"},
-    "You": {"person": "2s", "plural": True, "es": "Tú / Ustedes", "be_pres": "are", "be_past": "were", "have": "have"},
+    "You": {"person": "2s", "plural": True, "es": "Tú", "be_pres": "are", "be_past": "were", "have": "have"},
     "He": {"person": "3s", "plural": False, "es": "Él", "be_pres": "is", "be_past": "was", "have": "has"},
     "She": {"person": "3s", "plural": False, "es": "Ella", "be_pres": "is", "be_past": "was", "have": "has"},
-    "It": {"person": "3s", "plural": False, "es": "Eso / Ello", "be_pres": "is", "be_past": "was", "have": "has"},
+    "It": {"person": "3s", "plural": False, "es": "Eso", "be_pres": "is", "be_past": "was", "have": "has"},
     "We": {"person": "1p", "plural": True, "es": "Nosotros", "be_pres": "are", "be_past": "were", "have": "have"},
     "They": {"person": "3p", "plural": True, "es": "Ellos", "be_pres": "are", "be_past": "were", "have": "have"},
 }
 
 VERBS_DB = {
-    "work": {"3s": "works", "past": "worked", "ing": "working", "es_inf": "trabajar", "es_pres": "trabaja(s)", "es_past": "trabajó/trabajaba"},
-    "study": {"3s": "studies", "past": "studied", "ing": "studying", "es_inf": "estudiar", "es_pres": "estudia(s)", "es_past": "estudió/estudiaba"},
-    "speak": {"3s": "speaks", "past": "spoke", "ing": "speaking", "es_inf": "hablar", "es_pres": "habla(s)", "es_past": "habló/hablaba"},
-    "travel": {"3s": "travels", "past": "traveled", "ing": "traveling", "es_inf": "viajar", "es_pres": "viaja(s)", "es_past": "viajó/viajaba"},
-    "go": {"3s": "goes", "past": "went", "ing": "going", "es_inf": "ir", "es_pres": "va(s)", "es_past": "fue/iba"},
-    "eat": {"3s": "eats", "past": "ate", "ing": "eating", "es_inf": "comer", "es_pres": "come(s)", "es_past": "comió/comía"},
-    "read": {"3s": "reads", "past": "read", "ing": "reading", "es_inf": "leer", "es_pres": "lee(s)", "es_past": "leyó/leía"},
-    "write": {"3s": "writes", "past": "wrote", "ing": "writing", "es_inf": "escribir", "es_pres": "escribe(s)", "es_past": "escribió/escribía"},
-    "learn": {"3s": "learns", "past": "learned", "ing": "learning", "es_inf": "aprender", "es_pres": "aprende(s)", "es_past": "aprendió/aprendía"},
-    "play": {"3s": "plays", "past": "played", "ing": "playing", "es_inf": "jugar / tocar", "es_pres": "juega(s)", "es_past": "jugó/jugaba"},
-    "buy": {"3s": "buys", "past": "bought", "ing": "buying", "es_inf": "comprar", "es_pres": "compra(s)", "es_past": "compró/compraba"},
-    "visit": {"3s": "visits", "past": "visited", "ing": "visiting", "es_inf": "visitar", "es_pres": "visita(s)", "es_past": "visitó/visitaba"},
-    "cook": {"3s": "cooks", "past": "cooked", "ing": "cooking", "es_inf": "cocinar", "es_pres": "cocina(s)", "es_past": "cocinó/cocinaba"},
-    "drive": {"3s": "drives", "past": "drove", "ing": "driving", "es_inf": "conducir", "es_pres": "conduce(s)", "es_past": "condujo/conducía"},
-    "live": {"3s": "lives", "past": "lived", "ing": "living", "es_inf": "vivir", "es_pres": "vive(s)", "es_past": "vivió/vivía"},
+    "work": {
+        "3s": "works", "past": "worked", "ing": "working", "es_inf": "trabajar",
+        "es_pres_map": {"1s": "trabajo", "2s": "trabajas", "3s": "trabaja", "1p": "trabajamos", "3p": "trabajan"},
+        "es_past_map": {"1s": "trabajé", "2s": "trabajaste", "3s": "trabajó", "1p": "trabajamos", "3p": "trabajaron"},
+        "es_fut_map": {"1s": "trabajaré", "2s": "trabajarás", "3s": "trabajará", "1p": "trabajaremos", "3p": "trabajarán"},
+    },
+    "study": {
+        "3s": "studies", "past": "studied", "ing": "studying", "es_inf": "estudiar",
+        "es_pres_map": {"1s": "estudio", "2s": "estudias", "3s": "estudia", "1p": "estudiamos", "3p": "estudian"},
+        "es_past_map": {"1s": "estudié", "2s": "estudiaste", "3s": "estudió", "1p": "estudiamos", "3p": "estudiaron"},
+        "es_fut_map": {"1s": "estudiaré", "2s": "estudiarás", "3s": "estudiará", "1p": "estudiaremos", "3p": "estudiarán"},
+    },
+    "speak": {
+        "3s": "speaks", "past": "spoke", "ing": "speaking", "es_inf": "hablar",
+        "es_pres_map": {"1s": "hablo", "2s": "hablas", "3s": "habla", "1p": "hablamos", "3p": "hablan"},
+        "es_past_map": {"1s": "hablé", "2s": "hablaste", "3s": "habló", "1p": "hablamos", "3p": "hablaron"},
+        "es_fut_map": {"1s": "hablaré", "2s": "hablarás", "3s": "hablará", "1p": "hablaremos", "3p": "hablarán"},
+    },
+    "travel": {
+        "3s": "travels", "past": "traveled", "ing": "traveling", "es_inf": "viajar",
+        "es_pres_map": {"1s": "viajo", "2s": "viajas", "3s": "viaja", "1p": "viajamos", "3p": "viajan"},
+        "es_past_map": {"1s": "viajé", "2s": "viajaste", "3s": "viajó", "1p": "viajamos", "3p": "viajaron"},
+        "es_fut_map": {"1s": "viajaré", "2s": "viajarás", "3s": "viajará", "1p": "viajaremos", "3p": "viajarán"},
+    },
+    "go": {
+        "3s": "goes", "past": "went", "ing": "going", "es_inf": "ir",
+        "es_pres_map": {"1s": "voy", "2s": "vas", "3s": "va", "1p": "vamos", "3p": "van"},
+        "es_past_map": {"1s": "fui", "2s": "fuiste", "3s": "fue", "1p": "fuimos", "3p": "fueron"},
+        "es_fut_map": {"1s": "iré", "2s": "irás", "3s": "irá", "1p": "iremos", "3p": "irán"},
+    },
+    "eat": {
+        "3s": "eats", "past": "ate", "ing": "eating", "es_inf": "comer",
+        "es_pres_map": {"1s": "como", "2s": "comes", "3s": "come", "1p": "comemos", "3p": "comen"},
+        "es_past_map": {"1s": "comí", "2s": "comiste", "3s": "comió", "1p": "comimos", "3p": "comieron"},
+        "es_fut_map": {"1s": "comeré", "2s": "comerás", "3s": "comerá", "1p": "comeremos", "3p": "comerán"},
+    },
+    "read": {
+        "3s": "reads", "past": "read", "ing": "reading", "es_inf": "leer",
+        "es_pres_map": {"1s": "leo", "2s": "lees", "3s": "lee", "1p": "leemos", "3p": "leen"},
+        "es_past_map": {"1s": "leí", "2s": "leíste", "3s": "leyó", "1p": "leímos", "3p": "leyeron"},
+        "es_fut_map": {"1s": "leeré", "2s": "leerás", "3s": "leerá", "1p": "leeremos", "3p": "leerán"},
+    },
+    "write": {
+        "3s": "writes", "past": "wrote", "ing": "writing", "es_inf": "escribir",
+        "es_pres_map": {"1s": "escribo", "2s": "escribes", "3s": "escribe", "1p": "escribimos", "3p": "escriben"},
+        "es_past_map": {"1s": "escribí", "2s": "escribiste", "3s": "escribió", "1p": "escribimos", "3p": "escribieron"},
+        "es_fut_map": {"1s": "escribiré", "2s": "escribirás", "3s": "escribirá", "1p": "escribiremos", "3p": "escribirán"},
+    },
+    "learn": {
+        "3s": "learns", "past": "learned", "ing": "learning", "es_inf": "aprender",
+        "es_pres_map": {"1s": "aprendo", "2s": "aprendes", "3s": "aprende", "1p": "aprendemos", "3p": "aprenden"},
+        "es_past_map": {"1s": "aprendí", "2s": "aprendiste", "3s": "aprendió", "1p": "aprendimos", "3p": "aprendieron"},
+        "es_fut_map": {"1s": "aprenderé", "2s": "aprenderás", "3s": "aprenderá", "1p": "aprenderemos", "3p": "aprenderán"},
+    },
+    "play": {
+        "3s": "plays", "past": "played", "ing": "playing", "es_inf": "jugar",
+        "es_pres_map": {"1s": "juego", "2s": "juegas", "3s": "juega", "1p": "jugamos", "3p": "juegan"},
+        "es_past_map": {"1s": "jugué", "2s": "jugaste", "3s": "jugó", "1p": "jugamos", "3p": "jugaron"},
+        "es_fut_map": {"1s": "jugaré", "2s": "jugarás", "3s": "jugará", "1p": "jugaremos", "3p": "jugarán"},
+    },
+    "buy": {
+        "3s": "buys", "past": "bought", "ing": "buying", "es_inf": "comprar",
+        "es_pres_map": {"1s": "compro", "2s": "compras", "3s": "compra", "1p": "compramos", "3p": "compran"},
+        "es_past_map": {"1s": "compré", "2s": "compraste", "3s": "compró", "1p": "compramos", "3p": "compraron"},
+        "es_fut_map": {"1s": "compraré", "2s": "comprarás", "3s": "comprará", "1p": "compraremos", "3p": "comprarán"},
+    },
+    "visit": {
+        "3s": "visits", "past": "visited", "ing": "visiting", "es_inf": "visitar",
+        "es_pres_map": {"1s": "visito", "2s": "visitas", "3s": "visita", "1p": "visitamos", "3p": "visitan"},
+        "es_past_map": {"1s": "visité", "2s": "visitaste", "3s": "visitó", "1p": "visitamos", "3p": "visitaron"},
+        "es_fut_map": {"1s": "visitaré", "2s": "visitarás", "3s": "visitará", "1p": "visitaremos", "3p": "visitarán"},
+    },
+    "cook": {
+        "3s": "cooks", "past": "cooked", "ing": "cooking", "es_inf": "cocinar",
+        "es_pres_map": {"1s": "cocino", "2s": "cocinas", "3s": "cocina", "1p": "cocinamos", "3p": "cocinan"},
+        "es_past_map": {"1s": "cociné", "2s": "cocinaste", "3s": "cocinó", "1p": "cocinamos", "3p": "cocinaron"},
+        "es_fut_map": {"1s": "cocinaré", "2s": "cocinarás", "3s": "cocinará", "1p": "cocinaremos", "3p": "cocinarán"},
+    },
+    "drive": {
+        "3s": "drives", "past": "drove", "ing": "driving", "es_inf": "conducir",
+        "es_pres_map": {"1s": "conduzco", "2s": "conduces", "3s": "conduce", "1p": "conducimos", "3p": "conducen"},
+        "es_past_map": {"1s": "conduje", "2s": "condujiste", "3s": "condujo", "1p": "condujimos", "3p": "condujeron"},
+        "es_fut_map": {"1s": "conduciré", "2s": "conducirás", "3s": "conducirá", "1p": "conduciremos", "3p": "conducirán"},
+    },
+    "live": {
+        "3s": "lives", "past": "lived", "ing": "living", "es_inf": "vivir",
+        "es_pres_map": {"1s": "vivo", "2s": "vives", "3s": "vive", "1p": "vivimos", "3p": "viven"},
+        "es_past_map": {"1s": "viví", "2s": "viviste", "3s": "vivió", "1p": "vivimos", "3p": "vivieron"},
+        "es_fut_map": {"1s": "viviré", "2s": "vivirás", "3s": "vivirá", "1p": "viviremos", "3p": "vivirán"},
+    },
 }
 
 COMPLEMENTS_PRESETS = {
@@ -299,20 +374,26 @@ COMPLEMENTS_PRESETS = {
     "at home": "en casa",
     "with my family": "con mi familia",
     "very fast": "muy rápido",
-    "happy": "feliz / felices",
-    "ready for the trip": "listo(s) para el viaje",
+    "happy": "feliz",
+    "ready for the trip": "listo para el viaje",
     "a new car": "un auto nuevo",
     "time today": "tiempo hoy",
 }
 
-MODALS_INFO = {
-    "can": {"es": "poder (habilidad / posibilidad)", "neg": "cannot / can't"},
-    "could": {"es": "podría / pude (posibilidad / pasado)", "neg": "could not / couldn't"},
-    "should": {"es": "debería (consejo / recomendación)", "neg": "should not / shouldn't"},
-    "must": {"es": "deber (obligación fuerte)", "neg": "must not / mustn't"},
-    "may": {"es": "poder (permiso formal / probabilidad)", "neg": "may not"},
-    "might": {"es": "podría (probabilidad baja)", "neg": "might not"},
+MODALS_CONJ_ES = {
+    "can": {"1s": "puedo", "2s": "puedes", "3s": "puede", "1p": "podemos", "3p": "pueden"},
+    "could": {"1s": "podría", "2s": "podrías", "3s": "podría", "1p": "podríamos", "3p": "podrían"},
+    "should": {"1s": "debería", "2s": "deberías", "3s": "debería", "1p": "deberíamos", "3p": "deberían"},
+    "must": {"1s": "debo", "2s": "debes", "3s": "debe", "1p": "debemos", "3p": "deben"},
+    "may": {"1s": "puedo", "2s": "puedes", "3s": "puede", "1p": "podemos", "3p": "pueden"},
+    "might": {"1s": "podría", "2s": "podrías", "3s": "podría", "1p": "podríamos", "3p": "podrían"},
 }
+
+BE_PRES_ES = {"1s": "estoy", "2s": "estás", "3s": "está", "1p": "estamos", "3p": "están"}
+BE_PAST_ES = {"1s": "estaba", "2s": "estabas", "3s": "estaba", "1p": "estábamos", "3p": "estaban"}
+HAVE_PRES_ES = {"1s": "tengo", "2s": "tienes", "3s": "tiene", "1p": "tenemos", "3p": "tienen"}
+
+
 
 CHALLENGES = [
     {"es": "Ella puede hablar inglés todos los días.", "en": "She can speak English every day.", "hint": "Modal 'can' + verbo base sin 's'"},
@@ -619,7 +700,6 @@ SHADOWING_LESSONS = [
 # BANCO DE PREGUNTAS PARA EXÁMENES (A1, A2, B1, B2)
 # ==============================================================================
 EXAM_BANK = [
-    # A1
     {
         "id": "ex_01",
         "level": "A1 - Básico",
@@ -690,7 +770,6 @@ EXAM_BANK = [
         "answer": "We have a reservation for four nights.",
         "explanation": "El audio dice exactamente: 'We have a reservation for four nights.'",
     },
-    # A2
     {
         "id": "ex_06",
         "level": "A2 - Elemental",
@@ -761,7 +840,6 @@ EXAM_BANK = [
         "answer": "Could you tell me where the boarding gate is?",
         "explanation": "La frase pregunta por la puerta de embarque ('boarding gate') usando el modal cortés 'Could you'.",
     },
-    # B1 / B2
     {
         "id": "ex_11",
         "level": "B1/B2 - Intermedio",
@@ -897,17 +975,30 @@ def normalize_english_answer(text: str) -> str:
     return norm
 
 
+def translate_complement_es(comp_clean: str, person: str, is_female_3s: bool = False) -> str:
+    if comp_clean == "happy":
+        return "felices" if person in ("1p", "3p") else "feliz"
+    if comp_clean == "ready for the trip":
+        if person in ("1p", "3p"):
+            return "listos para el viaje"
+        return "lista para el viaje" if is_female_3s else "listo para el viaje"
+    return COMPLEMENTS_PRESETS.get(comp_clean, comp_clean)
+
+
 def build_sentences(subject_str: str, structure_type: str, action_str: str, complement_str: str):
     warnings = []
     notes = []
 
     subj_clean = subject_str.strip() or "I"
     prof = infer_subject_profile(subj_clean)
+    person = prof["person"]
+    is_female_3s = subj_clean.strip().lower() == "she"
     s_disp = prof["display"]
     s_lower_for_q = "I" if s_disp == "I" else (s_disp[0].lower() + s_disp[1:] if s_disp in SUBJECTS else s_disp)
 
     action_clean = action_str.strip().lower()
     comp_clean = complement_str.strip()
+    c_es = translate_complement_es(comp_clean, person, is_female_3s)
 
     if structure_type in ("To Be (Presente: am/is/are)", "To Be (Pasado: was/were)") and action_clean in VERBS_DB:
         warnings.append(
@@ -933,9 +1024,9 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
         notes.append(f"**Regla Modal (`{modal}`):** Nunca cambia en tercera persona (`He {modal}`, nunca *He {modal}s*) y el verbo principal (`{verb_base}`) va siempre en **forma base** sin *to*.")
         notes.append(f"**Pregunta:** Se invierte el modal antes del sujeto (`{modal.capitalize()} {s_lower_for_q}...`), sin usar *do/does*.")
 
-        v_es = VERBS_DB.get(verb_base, {}).get("es_inf", verb_base)
-        c_es = COMPLEMENTS_PRESETS.get(comp_clean, comp_clean)
-        es_trans = f"{prof['es']} [{MODALS_INFO[modal]['es'].split(' ')[0]}] {v_es} {c_es}".strip() + "."
+        modal_es = MODALS_CONJ_ES[modal][person]
+        v_es = "ser / estar" if verb_base == "be" else VERBS_DB.get(verb_base, {}).get("es_inf", verb_base)
+        es_trans = cap_first(f"{prof['es']} {modal_es} {v_es} {c_es}.")
 
     elif structure_type == "To Be (Presente: am/is/are)":
         be_form = prof["be_pres"]
@@ -946,8 +1037,8 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
 
         notes.append(f"**Verbo To Be (Presente):** Para `{s_disp}` corresponde **`{be_form}`**.")
         notes.append("**Negación y Pregunta:** `To be` es autosuficiente; no utiliza *do/does*. Se niega añadiendo `not` y se pregunta invirtiendo el orden.")
-        c_es = COMPLEMENTS_PRESETS.get(comp_clean, comp_clean)
-        es_trans = f"{prof['es']} está / es {mid} {c_es}".strip() + "."
+        be_es = BE_PRES_ES[person]
+        es_trans = cap_first(f"{prof['es']} {be_es} {mid} {c_es}.")
 
     elif structure_type == "To Be (Pasado: was/were)":
         be_form = prof["be_past"]
@@ -958,8 +1049,8 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
 
         notes.append(f"**Verbo To Be (Pasado):** Para `{s_disp}` corresponde **`{be_form}`**.")
         notes.append("**Negación y Pregunta:** No uses *did* con `was/were`. Invierte `{be_form}` para preguntar.")
-        c_es = COMPLEMENTS_PRESETS.get(comp_clean, comp_clean)
-        es_trans = f"{prof['es']} estaba / fue {mid} {c_es}".strip() + "."
+        be_es = BE_PAST_ES[person]
+        es_trans = cap_first(f"{prof['es']} {be_es} {mid} {c_es}.")
 
     elif structure_type == "Have (Presente Simple: have/has)":
         have_aff = prof["have"]
@@ -970,8 +1061,8 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
         ques = cap_first(f"{aux_do} {s_lower_for_q} have {extra} {comp_clean}?")
 
         notes.append(f"**Have como verbo principal:** En afirmativa usa **`{have_aff}`**, pero en negativa e interrogativa usa el auxiliar **`{aux_do}`** y el verbo vuelve a su forma base **`have`**.")
-        c_es = COMPLEMENTS_PRESETS.get(comp_clean, comp_clean)
-        es_trans = f"{prof['es']} tiene(n) {extra} {c_es}".strip() + "."
+        have_es = HAVE_PRES_ES[person]
+        es_trans = cap_first(f"{prof['es']} {have_es} {extra} {c_es}.")
 
     elif structure_type == "Presente Simple (do / does)":
         verb_base = action_clean if action_clean else "work"
@@ -988,9 +1079,9 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
         else:
             notes.append(f"**Presente Simple (`{s_disp}`):** El verbo queda en forma base (**`{verb_base}`**) y se auxilia con **`do`** en negativa e interrogativa.")
 
-        v_es = VERBS_DB.get(verb_base, {}).get("es_pres", verb_base)
-        c_es = COMPLEMENTS_PRESETS.get(comp_clean, comp_clean)
-        es_trans = f"{prof['es']} {v_es} {c_es}".strip() + "."
+        v_info = VERBS_DB.get(verb_base, {})
+        v_es = v_info.get("es_pres_map", {}).get(person, verb_base)
+        es_trans = cap_first(f"{prof['es']} {v_es} {c_es}.")
 
     elif structure_type == "Pasado Simple (did)":
         verb_base = action_clean if action_clean else "work"
@@ -1003,9 +1094,9 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
         notes.append(f"**Pasado Simple:** En afirmativa se usa el verbo en pasado (**`{verb_past}`**) para todos los sujetos.")
         notes.append(f"**Efecto Imán de `did`:** En negativa (`did not`) y pregunta (`Did...`), el auxiliar absorbe el pasado y el verbo principal regresa a su forma base (**`{verb_base}`**).")
 
-        v_es = VERBS_DB.get(verb_base, {}).get("es_past", verb_base)
-        c_es = COMPLEMENTS_PRESETS.get(comp_clean, comp_clean)
-        es_trans = f"{prof['es']} {v_es} {c_es}".strip() + "."
+        v_info = VERBS_DB.get(verb_base, {})
+        v_es = v_info.get("es_past_map", {}).get(person, verb_base)
+        es_trans = cap_first(f"{prof['es']} {v_es} {c_es}.")
 
     elif structure_type == "Futuro Simple (will)":
         verb_base = action_clean if action_clean else "travel"
@@ -1014,9 +1105,9 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
         ques = cap_first(f"will {s_lower_for_q} {verb_base} {comp_clean}?")
 
         notes.append(f"**Futuro con `will`:** Funciona igual para todos los sujetos. Siempre va seguido del verbo en forma base (**`{verb_base}`**). Contracción negativa común: *won't*.")
-        v_es = VERBS_DB.get(verb_base, {}).get("es_inf", verb_base)
-        c_es = COMPLEMENTS_PRESETS.get(comp_clean, comp_clean)
-        es_trans = f"{prof['es']} va a / {v_es} (futuro) {c_es}".strip() + "."
+        v_info = VERBS_DB.get(verb_base, {})
+        v_es = v_info.get("es_fut_map", {}).get(person, f"va a {verb_base}")
+        es_trans = cap_first(f"{prof['es']} {v_es} {c_es}.")
 
     return {
         "affirmative": aff,
@@ -1233,7 +1324,7 @@ with tab_matrix:
 
     with c_trans:
         st.markdown("#### 🇪🇸 Referencia en Español (Afirmativa)")
-        st.info(f"**Traducción aproximada:**\n\n{result['spanish']}")
+        st.info(f"**Traducción al español:**\n\n{result['spanish']}")
         if st.button("💾 Guardar oración en SQLite", use_container_width=True):
             inserted = save_sentence_db(
                 result["affirmative"],
