@@ -535,6 +535,145 @@ CHALLENGES = [
     {"es": "¿Tiene él un auto nuevo?", "en": "Does he have a new car?", "hint": "Pregunta con 'have' como verbo principal en 3ra persona -> 'Does he have...'"},
 ]
 
+
+# ==============================================================================
+# BANCO DE VIDEOS REALES DE SHADOWING CON SUBTÍTULOS EN INGLÉS (6 A 12 MINUTOS)
+# ==============================================================================
+SHADOWING_VIDEOS = [
+    {
+        "id": "vid_01",
+        "video_id": "o6a9kAswl-s",
+        "title": "10 Minutes of American English Shadowing Practice (Part 1!)",
+        "channel": "English Teacher Claire",
+        "duration": "07:17",
+        "level": "A2/B1 - Intermedio",
+        "category": "Shadowing Guiado (US)",
+        "url": "https://www.youtube.com/watch?v=o6a9kAswl-s",
+        "desc": "Práctica guiada de pronunciación y ritmo en inglés americano con frases en pantalla y pausas para repetir.",
+    },
+    {
+        "id": "vid_02",
+        "video_id": "MrrxN6GZJaU",
+        "title": "Shadowing English Speaking Practice | Daily Conversation for Beginners",
+        "channel": "English Unleashed: The Podcast",
+        "duration": "08:01",
+        "level": "A1/A2 - Básico",
+        "category": "Conversación Diaria",
+        "url": "https://www.youtube.com/watch?v=MrrxN6GZJaU",
+        "desc": "Entrenamiento de conversación cotidiana estilo podcast lento y claro con subtítulos integrados en inglés.",
+    },
+    {
+        "id": "vid_03",
+        "video_id": "KRXodcqsQXk",
+        "title": "Shadowing in English: Speak More Naturally in 10 Minutes",
+        "channel": "ez english practice",
+        "duration": "10:20",
+        "level": "B1 - Intermedio",
+        "category": "Fluidez y Entonación",
+        "url": "https://www.youtube.com/watch?v=KRXodcqsQXk",
+        "desc": "Sesión de 10 minutos enfocada en hablar con naturalidad, conectando palabras y mejorando la entonación.",
+    },
+    {
+        "id": "vid_04",
+        "video_id": "N6fE7ukKyd0",
+        "title": "Shadowing: Repeat-After-Me | English Speaking Practice",
+        "channel": "English Coach Chad",
+        "duration": "11:08",
+        "level": "B1/B2 - Intermedio",
+        "category": "Shadowing Guiado (US)",
+        "url": "https://www.youtube.com/watch?v=N6fE7ukKyd0",
+        "desc": "Ejercicio práctico de repetición inmediata ('Repeat-After-Me') para entrenar músculo articulatorio y acento estadounidense.",
+    },
+    {
+        "id": "vid_05",
+        "video_id": "_t3pBsFMBVU",
+        "title": "How to do 10 minutes of speaking every day? | 8 Minute English",
+        "channel": "LEP - Learn English Podcast",
+        "duration": "08:55",
+        "level": "A2/B1 - Elemental",
+        "category": "Conversación Diaria",
+        "url": "https://www.youtube.com/watch?v=_t3pBsFMBVU",
+        "desc": "Episodio corto con texto en pantalla sobre cómo crear el hábito diario de hablar inglés 10 minutos al día.",
+    },
+    {
+        "id": "vid_06",
+        "video_id": "aOLsQN98aI4",
+        "title": "10 Minutes to Improve English Speaking Skills Efficiently",
+        "channel": "English Speaking Course",
+        "duration": "11:15",
+        "level": "A2/B1 - Intermedio",
+        "category": "Diálogos Cotidianos",
+        "url": "https://www.youtube.com/watch?v=aOLsQN98aI4",
+        "desc": "Diálogos cotidianos subtitulados en inglés para practicar shadowing continuo en situaciones reales.",
+    },
+    {
+        "id": "vid_07",
+        "video_id": "eQbtmufQT0Y",
+        "title": "A1-A2 English Listening & Speaking Practice | 10-Minute Practice",
+        "channel": "PodEnglish",
+        "duration": "11:58",
+        "level": "A1/A2 - Básico",
+        "category": "Conversación Diaria",
+        "url": "https://www.youtube.com/watch?v=eQbtmufQT0Y",
+        "desc": "Práctica progresiva para niveles A1 y A2 con vocabulario esencial y subtítulos claros en inglés.",
+    },
+    {
+        "id": "vid_08",
+        "video_id": "hkF_qsA88Ic",
+        "title": "Business English | Shadowing Practice to Improve Fluency",
+        "channel": "Fluency Ninja",
+        "duration": "11:37",
+        "level": "B1/B2 - Profesional",
+        "category": "Trabajo y Negocios",
+        "url": "https://www.youtube.com/watch?v=hkF_qsA88Ic",
+        "desc": "Entrenamiento de frases profesionales para el trabajo, reuniones y comunicación corporativa en inglés.",
+    },
+    {
+        "id": "vid_09",
+        "video_id": "mhFQIStljzA",
+        "title": "Business English Online Meetings | Shadowing Practice to Speak Fluently",
+        "channel": "Fluency Ninja",
+        "duration": "11:52",
+        "level": "B2 - Intermedio Alto",
+        "category": "Trabajo y Negocios",
+        "url": "https://www.youtube.com/watch?v=mhFQIStljzA",
+        "desc": "Expresiones clave con subtítulos en inglés para participar con fluidez en reuniones virtuales de trabajo.",
+    },
+    {
+        "id": "vid_10",
+        "video_id": "HTG_ObwJRUw",
+        "title": "10-MIN SHADOWING ENGLISH SPEAKING PRACTICE | Expressing Opinions",
+        "channel": "Simply Explained English",
+        "duration": "12:25",
+        "level": "B1/B2 - Intermedio",
+        "category": "Fluidez y Entonación",
+        "url": "https://www.youtube.com/watch?v=HTG_ObwJRUw",
+        "desc": "Práctica intensiva para expresar opiniones, acuerdos y sentimientos en inglés de forma natural.",
+    },
+    {
+        "id": "vid_11",
+        "video_id": "Y681hXWwhQY",
+        "title": "The benefits of doing nothing ⏲️ 6 Minute English",
+        "channel": "BBC Learning English",
+        "duration": "06:20",
+        "level": "B1/B2 - Intermedio",
+        "category": "BBC 6 Minute English (UK)",
+        "url": "https://www.youtube.com/watch?v=Y681hXWwhQY",
+        "desc": "Diálogo auténtico en inglés británico con vocabulario explicado y subtítulos sincronizados.",
+    },
+    {
+        "id": "vid_12",
+        "video_id": "pjFlVc-EDzc",
+        "title": "What should you eat for a better night’s sleep? ⏲️ 6 Minute English",
+        "channel": "BBC Learning English",
+        "duration": "06:33",
+        "level": "B1/B2 - Intermedio",
+        "category": "BBC 6 Minute English (UK)",
+        "url": "https://www.youtube.com/watch?v=pjFlVc-EDzc",
+        "desc": "Conversación dinámica de 6 minutos con subtítulos en inglés para entrenar oído y pronunciación británica.",
+    },
+]
+
 SHADOWING_LESSONS = [
     {
         "id": "sh_a1_01",
@@ -1729,6 +1868,11 @@ def synthesize_shadowing_loop(sentences_list: tuple, slow_mode: bool = False, tl
 if "vocab_batch" not in st.session_state:
     # Al ingresar a la aplicación, selecciona aleatoriamente un lote fresco de palabras
     st.session_state.vocab_batch = random.sample(range(len(VOCABULARY_BANK)), 6)
+if "video_batch" not in st.session_state:
+    # Lote inicial de 3 videos sugeridos de ~10 min con subtítulos en inglés
+    st.session_state.video_batch = random.sample(range(len(SHADOWING_VIDEOS)), 3)
+if "selected_video_idx" not in st.session_state:
+    st.session_state.selected_video_idx = st.session_state.video_batch[0]
 
 # ==============================================================================
 # INTERFAZ DE USUARIO (SIDEBAR Y TABS)
@@ -2051,6 +2195,7 @@ with tab_shadowing:
         "Selecciona el material de entrenamiento:",
         options=[
             "📚 Lecciones del Curso (8 Diálogos A1–B2)",
+            "🎬 Videos con Subtítulos CC (~10 min)",
             "🧩 Oraciones creadas en la Matriz",
             "✍️ Texto personalizado / Subir audio propio",
         ],
@@ -2147,6 +2292,138 @@ with tab_shadowing:
                         if st.button(f"🔊 Escuchar Turno {idx}", key=f"sh_btn_{lesson_id}_{idx}", use_container_width=True):
                             s_audio = synthesize_speech(item["en"], is_slow, selected_tld)
                             st.audio(s_audio, format="audio/mp3", autoplay=True)
+
+    elif source_mode == "🎬 Videos con Subtítulos CC (~10 min)":
+        st.markdown("### 🎬 Videos de Shadowing con Subtítulos en Inglés (6 a 12 min)")
+        st.write(
+            "Entrena con videos reales en inglés de ~10 minutos con **subtítulos en inglés (`cc_load_policy=1`)** activados automáticamente. "
+            "Presiona **🔄 Actualizar / Traer otros videos diferentes** cuando quieras rotar la selección."
+        )
+
+        v_f1, v_f2, v_f3 = st.columns([1.3, 1.3, 1.4], vertical_alignment="bottom")
+        with v_f1:
+            vid_cats = ["Todas las categorías"] + sorted(list({v["category"] for v in SHADOWING_VIDEOS}))
+            sel_vid_cat = st.selectbox("Filtrar por estilo de video:", options=vid_cats)
+        with v_f2:
+            vid_levels = ["Todos los niveles"] + sorted(list({v["level"] for v in SHADOWING_VIDEOS}))
+            sel_vid_lvl = st.selectbox("Filtrar por nivel:", options=vid_levels)
+        with v_f3:
+            if st.button("🔄 Actualizar / Traer otros videos diferentes", type="primary", use_container_width=True):
+                pool_v = [
+                    i for i, v in enumerate(SHADOWING_VIDEOS)
+                    if (sel_vid_cat == "Todas las categorías" or v["category"] == sel_vid_cat)
+                    and (sel_vid_lvl == "Todos los niveles" or v["level"] == sel_vid_lvl)
+                ]
+                if not pool_v:
+                    pool_v = list(range(len(SHADOWING_VIDEOS)))
+                others = [i for i in pool_v if i != st.session_state.selected_video_idx]
+                chosen_pool = others if len(others) >= 3 else pool_v
+                st.session_state.video_batch = random.sample(chosen_pool, min(3, len(chosen_pool)))
+                st.session_state.selected_video_idx = st.session_state.video_batch[0]
+                st.rerun()
+
+        filtered_vid_indices = [
+            i for i, v in enumerate(SHADOWING_VIDEOS)
+            if (sel_vid_cat == "Todas las categorías" or v["category"] == sel_vid_cat)
+            and (sel_vid_lvl == "Todos los niveles" or v["level"] == sel_vid_lvl)
+        ]
+        if not filtered_vid_indices:
+            st.warning("No hay videos con esa combinación exacta; mostrando todo el catálogo.")
+            filtered_vid_indices = list(range(len(SHADOWING_VIDEOS)))
+
+        # Asegurar que el lote actual pertenezca al filtro
+        batch_valid = [i for i in st.session_state.video_batch if i in filtered_vid_indices]
+        if not batch_valid:
+            batch_valid = random.sample(filtered_vid_indices, min(3, len(filtered_vid_indices)))
+            st.session_state.video_batch = batch_valid
+            st.session_state.selected_video_idx = batch_valid[0]
+
+        st.markdown("#### 🎯 Videos sugeridos en esta tanda (Haz clic en uno para cargarlo):")
+        v_cards = st.columns(len(batch_valid))
+        for col_i, v_idx in enumerate(batch_valid):
+            v_obj = SHADOWING_VIDEOS[v_idx]
+            is_active_v = (v_idx == st.session_state.selected_video_idx)
+            with v_cards[col_i]:
+                border_col = "#2563eb" if is_active_v else "#cbd5e1"
+                bg_col = "#eff6ff" if is_active_v else "#ffffff"
+                st.markdown(
+                    f"""
+                    <div style="border:2px solid {border_col}; background:{bg_col}; border-radius:10px; padding:10px 12px; margin-bottom:6px;">
+                        <div style="font-size:0.76rem; font-weight:700; color:#1d4ed8;">⏱️ {v_obj['duration']} • {v_obj['level']}</div>
+                        <div style="font-size:0.95rem; font-weight:700; color:#0f172a; margin:4px 0;">{v_obj['title']}</div>
+                        <div style="font-size:0.8rem; color:#475569;">📺 {v_obj['channel']} | <em>{v_obj['category']}</em></div>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+                btn_lbl = "▶️ Viendo ahora" if is_active_v else "🎬 Seleccionar este video"
+                if st.button(btn_lbl, key=f"sel_vid_btn_{v_idx}", use_container_width=True, disabled=is_active_v):
+                    st.session_state.selected_video_idx = v_idx
+                    st.rerun()
+
+        current_vid = SHADOWING_VIDEOS[st.session_state.selected_video_idx]
+        lesson_id = current_vid["id"]
+        lesson_title_for_db = f"Video: {current_vid['title']}"
+
+        st.divider()
+        vid_col_player, vid_col_info = st.columns([1.8, 1])
+        with vid_col_player:
+            # Reproductor YouTube embebido con subtítulos en inglés forzados (cc_load_policy=1 & cc_lang_pref=en)
+            embed_url = f"https://www.youtube.com/embed/{current_vid['video_id']}?cc_load_policy=1&cc_lang_pref=en&hl=en&rel=0"
+            st.markdown(
+                f"""
+                <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.12); border:1px solid #cbd5e1;">
+                    <iframe src="{embed_url}"
+                        style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+        with vid_col_info:
+            done_v = shadowing_map.get(lesson_id)
+            done_badge = f"✅ Practicado {done_v['completed_count']} vez/veces" if done_v else "⏳ Pendiente por registrar"
+            st.info(
+                f"**🎬 Reproduciendo ahora:**\n\n"
+                f"**{current_vid['title']}**\n\n"
+                f"- **Canal:** {current_vid['channel']}\n"
+                f"- **Duración:** `{current_vid['duration']}` min\n"
+                f"- **Nivel:** {current_vid['level']}\n"
+                f"- **Estado en BD:** {done_badge}\n\n"
+                f"📝 *{current_vid['desc']}*"
+            )
+            st.markdown(f"🔗 [Abrir video directamente en YouTube]({current_vid['url']})")
+            st.caption(
+                "💡 **Tip para Subtítulos (CC) y Velocidad:** El reproductor activa automáticamente los subtítulos en inglés (`CC`). "
+                "En el ícono de engranaje ⚙️ del video puedes ajustar la velocidad a `0.75x` en las frases rápidas."
+            )
+
+        with st.expander("➕ ¿Tienes el enlace de otro video de YouTube en inglés? Pégalo aquí para practicar"):
+            custom_yt_url = st.text_input(
+                "Pega cualquier URL de YouTube (ej. https://www.youtube.com/watch?v=...):",
+                placeholder="https://www.youtube.com/watch?v=o6a9kAswl-s",
+            )
+            if custom_yt_url.strip():
+                yt_match = re.search(r"(?:v=|youtu\.be/|embed/)([A-Za-z0-9_-]{11})", custom_yt_url.strip())
+                if yt_match:
+                    custom_vid_id = yt_match.group(1)
+                    custom_embed = f"https://www.youtube.com/embed/{custom_vid_id}?cc_load_policy=1&cc_lang_pref=en&hl=en&rel=0"
+                    st.markdown(
+                        f"""
+                        <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:12px; margin-top:8px;">
+                            <iframe src="{custom_embed}"
+                                style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
+                                allowfullscreen>
+                            </iframe>
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+                else:
+                    st.warning("No se detectó un ID válido de YouTube en ese enlace.")
 
     elif source_mode == "🧩 Oraciones creadas en la Matriz":
         lesson_id = "matrix_live"
