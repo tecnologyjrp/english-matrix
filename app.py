@@ -1422,7 +1422,7 @@ with tab_shadowing:
             active_sentences = [s["en"] for s in lesson["sentences"]]
 
             st.markdown("### 🔁 Pista Maestra de Entrenamiento (Diálogo completo o con pausas)")
-            col_loop1, col_loop2, col_loop3 = st.columns([1, 1.3, 1.3])
+            col_loop1, col_loop2, col_loop3 = st.columns([1, 1.3, 1.3], vertical_alignment="bottom")
             with col_loop1:
                 reps = st.selectbox("Repeticiones por turno:", options=[1, 2, 3], index=1)
             with col_loop2:
