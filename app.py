@@ -2356,10 +2356,12 @@ with tab_shadowing:
                 bg_col = "#eff6ff" if is_active_v else "#ffffff"
                 st.markdown(
                     f"""
-                    <div style="border:2px solid {border_col}; background:{bg_col}; border-radius:10px; padding:10px 12px; margin-bottom:6px;">
-                        <div style="font-size:0.76rem; font-weight:700; color:#1d4ed8;">⏱️ {v_obj['duration']} • {v_obj['level']}</div>
-                        <div style="font-size:0.95rem; font-weight:700; color:#0f172a; margin:4px 0;">{v_obj['title']}</div>
-                        <div style="font-size:0.8rem; color:#475569;">📺 {v_obj['channel']} | <em>{v_obj['category']}</em></div>
+                    <div style="border:2px solid {border_col}; background:{bg_col}; border-radius:10px; padding:12px 14px; margin-bottom:8px; height:128px; display:flex; flex-direction:column; justify-content:space-between; box-sizing:border-box;">
+                        <div>
+                            <div style="font-size:0.76rem; font-weight:700; color:#1d4ed8;">⏱️ {v_obj['duration']} • {v_obj['level']}</div>
+                            <div style="font-size:0.95rem; font-weight:700; color:#0f172a; margin:6px 0 4px 0; line-height:1.35; max-height:2.7em; overflow:hidden; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;">{v_obj['title']}</div>
+                        </div>
+                        <div style="font-size:0.8rem; color:#475569; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">📺 {v_obj['channel']} | <em>{v_obj['category']}</em></div>
                     </div>
                     """,
                     unsafe_allow_html=True,
