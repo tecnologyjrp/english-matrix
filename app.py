@@ -384,90 +384,105 @@ VERBS_DB = {
         "es_pres_map": {"1s": "trabajo", "2s": "trabajas", "3s": "trabaja", "1p": "trabajamos", "3p": "trabajan"},
         "es_past_map": {"1s": "trabajé", "2s": "trabajaste", "3s": "trabajó", "1p": "trabajamos", "3p": "trabajaron"},
         "es_fut_map": {"1s": "trabajaré", "2s": "trabajarás", "3s": "trabajará", "1p": "trabajaremos", "3p": "trabajarán"},
+        "es_cond_map": {"1s": "trabajaría", "2s": "trabajarías", "3s": "trabajaría", "1p": "trabajaríamos", "3p": "trabajarían"},
     },
     "study": {
         "3s": "studies", "past": "studied", "ing": "studying", "es_inf": "estudiar",
         "es_pres_map": {"1s": "estudio", "2s": "estudias", "3s": "estudia", "1p": "estudiamos", "3p": "estudian"},
         "es_past_map": {"1s": "estudié", "2s": "estudiaste", "3s": "estudió", "1p": "estudiamos", "3p": "estudiaron"},
         "es_fut_map": {"1s": "estudiaré", "2s": "estudiarás", "3s": "estudiará", "1p": "estudiaremos", "3p": "estudiarán"},
+        "es_cond_map": {"1s": "estudiaría", "2s": "estudiarías", "3s": "estudiaría", "1p": "estudiaríamos", "3p": "estudiarían"},
     },
     "speak": {
         "3s": "speaks", "past": "spoke", "ing": "speaking", "es_inf": "hablar",
         "es_pres_map": {"1s": "hablo", "2s": "hablas", "3s": "habla", "1p": "hablamos", "3p": "hablan"},
         "es_past_map": {"1s": "hablé", "2s": "hablaste", "3s": "habló", "1p": "hablamos", "3p": "hablaron"},
         "es_fut_map": {"1s": "hablaré", "2s": "hablarás", "3s": "hablará", "1p": "hablaremos", "3p": "hablarán"},
+        "es_cond_map": {"1s": "hablaría", "2s": "hablarías", "3s": "hablaría", "1p": "hablaríamos", "3p": "hablarían"},
     },
     "travel": {
         "3s": "travels", "past": "traveled", "ing": "traveling", "es_inf": "viajar",
         "es_pres_map": {"1s": "viajo", "2s": "viajas", "3s": "viaja", "1p": "viajamos", "3p": "viajan"},
         "es_past_map": {"1s": "viajé", "2s": "viajaste", "3s": "viajó", "1p": "viajamos", "3p": "viajaron"},
         "es_fut_map": {"1s": "viajaré", "2s": "viajarás", "3s": "viajará", "1p": "viajaremos", "3p": "viajarán"},
+        "es_cond_map": {"1s": "viajaría", "2s": "viajarías", "3s": "viajaría", "1p": "viajaríamos", "3p": "viajarían"},
     },
     "go": {
         "3s": "goes", "past": "went", "ing": "going", "es_inf": "ir",
         "es_pres_map": {"1s": "voy", "2s": "vas", "3s": "va", "1p": "vamos", "3p": "van"},
         "es_past_map": {"1s": "fui", "2s": "fuiste", "3s": "fue", "1p": "fuimos", "3p": "fueron"},
         "es_fut_map": {"1s": "iré", "2s": "irás", "3s": "irá", "1p": "iremos", "3p": "irán"},
+        "es_cond_map": {"1s": "iría", "2s": "irías", "3s": "iría", "1p": "iríamos", "3p": "irían"},
     },
     "eat": {
         "3s": "eats", "past": "ate", "ing": "eating", "es_inf": "comer",
         "es_pres_map": {"1s": "como", "2s": "comes", "3s": "come", "1p": "comemos", "3p": "comen"},
         "es_past_map": {"1s": "comí", "2s": "comiste", "3s": "comió", "1p": "comimos", "3p": "comieron"},
         "es_fut_map": {"1s": "comeré", "2s": "comerás", "3s": "comerá", "1p": "comeremos", "3p": "comerán"},
+        "es_cond_map": {"1s": "comería", "2s": "comerías", "3s": "comería", "1p": "comeríamos", "3p": "comerían"},
     },
     "read": {
         "3s": "reads", "past": "read", "ing": "reading", "es_inf": "leer",
         "es_pres_map": {"1s": "leo", "2s": "lees", "3s": "lee", "1p": "leemos", "3p": "leen"},
         "es_past_map": {"1s": "leí", "2s": "leíste", "3s": "leyó", "1p": "leímos", "3p": "leyeron"},
         "es_fut_map": {"1s": "leeré", "2s": "leerás", "3s": "leerá", "1p": "leeremos", "3p": "leerán"},
+        "es_cond_map": {"1s": "leería", "2s": "leerías", "3s": "leería", "1p": "leeríamos", "3p": "leerían"},
     },
     "write": {
         "3s": "writes", "past": "wrote", "ing": "writing", "es_inf": "escribir",
         "es_pres_map": {"1s": "escribo", "2s": "escribes", "3s": "escribe", "1p": "escribimos", "3p": "escriben"},
         "es_past_map": {"1s": "escribí", "2s": "escribiste", "3s": "escribió", "1p": "escribimos", "3p": "escribieron"},
         "es_fut_map": {"1s": "escribiré", "2s": "escribirás", "3s": "escribirá", "1p": "escribiremos", "3p": "escribirán"},
+        "es_cond_map": {"1s": "escribiría", "2s": "escribirías", "3s": "escribiría", "1p": "escribiríamos", "3p": "escribirían"},
     },
     "learn": {
         "3s": "learns", "past": "learned", "ing": "learning", "es_inf": "aprender",
         "es_pres_map": {"1s": "aprendo", "2s": "aprendes", "3s": "aprende", "1p": "aprendemos", "3p": "aprenden"},
         "es_past_map": {"1s": "aprendí", "2s": "aprendiste", "3s": "aprendió", "1p": "aprendimos", "3p": "aprendieron"},
         "es_fut_map": {"1s": "aprenderé", "2s": "aprenderás", "3s": "aprenderá", "1p": "aprenderemos", "3p": "aprenderán"},
+        "es_cond_map": {"1s": "aprendería", "2s": "aprenderías", "3s": "aprendería", "1p": "aprenderíamos", "3p": "aprenderían"},
     },
     "play": {
         "3s": "plays", "past": "played", "ing": "playing", "es_inf": "jugar",
         "es_pres_map": {"1s": "juego", "2s": "juegas", "3s": "juega", "1p": "jugamos", "3p": "juegan"},
         "es_past_map": {"1s": "jugué", "2s": "jugaste", "3s": "jugó", "1p": "jugamos", "3p": "jugaron"},
         "es_fut_map": {"1s": "jugaré", "2s": "jugarás", "3s": "jugará", "1p": "jugaremos", "3p": "jugarán"},
+        "es_cond_map": {"1s": "jugaría", "2s": "jugarías", "3s": "jugaría", "1p": "jugaríamos", "3p": "jugarían"},
     },
     "buy": {
         "3s": "buys", "past": "bought", "ing": "buying", "es_inf": "comprar",
         "es_pres_map": {"1s": "compro", "2s": "compras", "3s": "compra", "1p": "compramos", "3p": "compran"},
         "es_past_map": {"1s": "compré", "2s": "compraste", "3s": "compró", "1p": "compramos", "3p": "compraron"},
         "es_fut_map": {"1s": "compraré", "2s": "comprarás", "3s": "comprará", "1p": "compraremos", "3p": "comprarán"},
+        "es_cond_map": {"1s": "compraría", "2s": "comprarías", "3s": "compraría", "1p": "compraríamos", "3p": "comprarían"},
     },
     "visit": {
         "3s": "visits", "past": "visited", "ing": "visiting", "es_inf": "visitar",
         "es_pres_map": {"1s": "visito", "2s": "visitas", "3s": "visita", "1p": "visitamos", "3p": "visitan"},
         "es_past_map": {"1s": "visité", "2s": "visitaste", "3s": "visitó", "1p": "visitamos", "3p": "visitaron"},
         "es_fut_map": {"1s": "visitaré", "2s": "visitarás", "3s": "visitará", "1p": "visitaremos", "3p": "visitarán"},
+        "es_cond_map": {"1s": "visitaría", "2s": "visitarías", "3s": "visitaría", "1p": "visitaríamos", "3p": "visitarían"},
     },
     "cook": {
         "3s": "cooks", "past": "cooked", "ing": "cooking", "es_inf": "cocinar",
         "es_pres_map": {"1s": "cocino", "2s": "cocinas", "3s": "cocina", "1p": "cocinamos", "3p": "cocinan"},
         "es_past_map": {"1s": "cociné", "2s": "cocinaste", "3s": "cocinó", "1p": "cocinamos", "3p": "cocinaron"},
         "es_fut_map": {"1s": "cocinaré", "2s": "cocinarás", "3s": "cocinará", "1p": "cocinaremos", "3p": "cocinarán"},
+        "es_cond_map": {"1s": "cocinaría", "2s": "cocinarías", "3s": "cocinaría", "1p": "cocinaríamos", "3p": "cocinarían"},
     },
     "drive": {
         "3s": "drives", "past": "drove", "ing": "driving", "es_inf": "conducir",
         "es_pres_map": {"1s": "conduzco", "2s": "conduces", "3s": "conduce", "1p": "conducimos", "3p": "conducen"},
         "es_past_map": {"1s": "conduje", "2s": "condujiste", "3s": "condujo", "1p": "condujimos", "3p": "condujeron"},
         "es_fut_map": {"1s": "conduciré", "2s": "conducirás", "3s": "conducirá", "1p": "conduciremos", "3p": "conducirán"},
+        "es_cond_map": {"1s": "conduciría", "2s": "conducirías", "3s": "conduciría", "1p": "conduciríamos", "3p": "conducirían"},
     },
     "live": {
         "3s": "lives", "past": "lived", "ing": "living", "es_inf": "vivir",
         "es_pres_map": {"1s": "vivo", "2s": "vives", "3s": "vive", "1p": "vivimos", "3p": "viven"},
         "es_past_map": {"1s": "viví", "2s": "viviste", "3s": "vivió", "1p": "vivimos", "3p": "vivieron"},
         "es_fut_map": {"1s": "viviré", "2s": "vivirás", "3s": "vivirá", "1p": "viviremos", "3p": "vivirán"},
+        "es_cond_map": {"1s": "viviría", "2s": "vivirías", "3s": "viviría", "1p": "viviríamos", "3p": "vivirían"},
     },
 }
 
@@ -818,6 +833,139 @@ SHADOWING_LESSONS = [
 # ==============================================================================
 # BANCO DE VOCABULARIO VISUAL (42 PALABRAS CON FONÉTICA, TRADUCCIÓN E ILUSTRACIÓN)
 # ==============================================================================
+
+# ==============================================================================
+# GUÍA PEDAGÓGICA INTERACTIVA POR ESTRUCTURA / MODAL / TIEMPO
+# ==============================================================================
+STRUCTURE_PEDAGOGY = {
+    "Presente Simple (do / does)": {
+        "meaning": "Acciones habituales, rutinas diarias, hechos reales o verdades permanentes.",
+        "when_to_use": "Úsalo cuando quieras expresar lo que alguien hace regularmente (todos los días, en el trabajo, en casa). NO se usa para lo que está pasando en este exacto segundo.",
+        "translation_guide": "Se traduce como el presente indicativo en español (ej. trabajo, trabajas, trabaja).",
+        "contrast": "En 3.ª persona singular (He, She, It) el verbo afirmativo lleva '-s/-es' (She works). En negativa y pregunta aparece el auxiliar 'do / does' y el verbo vuelve a su forma base.",
+        "coherent_tip": "Combínalo con adverbios de frecuencia o rutinas como 'English every day', 'in the office' o 'at home'."
+    },
+    "Pasado Simple (did)": {
+        "meaning": "Acciones que iniciaron y terminaron completamente en el pasado.",
+        "when_to_use": "Úsalo para relatar eventos cerrados (ayer, la semana pasada, en un viaje anterior).",
+        "translation_guide": "Se traduce como pretérito perfecto simple (ej. trabajé, viajó, comimos).",
+        "contrast": "En afirmativa el verbo cambia a pasado (worked, went, spoke). En negativa (did not) y pregunta (Did...?), el auxiliar 'did' absorbe el pasado y el verbo principal vuelve a su forma base.",
+        "coherent_tip": "Evita combinarlo con expresiones futuras como 'next month'. Úsalo con acciones concretas como 'a new book', 'in the office' o 'healthy food'."
+    },
+    "Futuro Simple (will)": {
+        "meaning": "Decisiones espontáneas tomadas en el momento, promesas, predicciones o eventos futuros.",
+        "when_to_use": "Úsalo cuando proyectes algo que ocurrirá después de hoy o para hacer una promesa firme.",
+        "translation_guide": "Se traduce como futuro simple en español (ej. viajaré, aprenderás, trabajaremos).",
+        "contrast": "'Will' es un modal puro: nunca cambia según el sujeto y el verbo siguiente va siempre en forma base sin 'to'. Negación común: 'will not' (won't).",
+        "coherent_tip": "Funciona de forma excelente con 'to Orlando next month', 'English every day' o 'a new car'."
+    },
+    "Modal: can": {
+        "meaning": "Habilidad física/mental (saber hacer algo), posibilidad real o permiso informal.",
+        "when_to_use": "Elígelo cuando quieras decir que alguien TIENE LA CAPACIDAD de hacer algo o para pedir/dar permiso en confianza.",
+        "translation_guide": "Se traduce como 'puedo / puedes / puede / podemos / pueden' + verbo infinitivo.",
+        "contrast": "Diferencia con 'may': 'can' indica habilidad (He can speak English = Él sabe hablar inglés), mientras que 'may' indica duda ('puede que...') o permiso muy formal.",
+        "coherent_tip": "Ideal con verbos de habilidad o acción como 'speak English every day', 'drive a new car' o 'cook healthy food'."
+    },
+    "Modal: could": {
+        "meaning": "Posibilidad suave (50% opcional), habilidad en el pasado o petición muy cortés.",
+        "when_to_use": "Elígelo para sugerir una alternativa sin imponerla ('podríamos viajar...'), hablar de lo que podías hacer antes o pedir algo con mucha educación ('Could you...?').",
+        "translation_guide": "Se traduce como condicional 'podría / podrías / podríamos' o pasado 'pude / podía'.",
+        "contrast": "Diferencia con 'must': 'could' es una sugerencia abierta y opcional; 'must' es una obligación innegociable.",
+        "coherent_tip": "Úsalo para proponer planes como 'travel to Orlando next month' o 'study a new book'."
+    },
+    "Modal: should": {
+        "meaning": "Consejo, recomendación saludable o sugerencia de lo que es correcto hacer.",
+        "when_to_use": "Elígelo cuando quieras dar una opinión o recomendación amable sin llegar a ser una orden estricta.",
+        "translation_guide": "Se traduce exactamente como 'debería / deberías / deberíamos / deberían'.",
+        "contrast": "Es más suave que 'must' y 'have to'. Con 'should' aconsejas (You should eat healthy food); con 'must' ordenas.",
+        "coherent_tip": "Muy natural con hábitos positivos: 'eat healthy food', 'study English every day' o 'read a new book'."
+    },
+    "Modal: must": {
+        "meaning": "Obligación estricta/urgente (100%), regla innegociable o deducción lógica casi segura.",
+        "when_to_use": "Elígelo para órdenes firmes, leyes, reglamentos o cuando algo es absolutamente indispensable.",
+        "translation_guide": "Se traduce como 'debo / debes / debe / debemos / deben' (obligación fuerte).",
+        "contrast": "¡Cuidado en negativa! 'must not (mustn't)' significa PROHIBICIÓN ESTRICTA (está prohibido hacerlo), mientras que 'don't have to' significa que es opcional.",
+        "coherent_tip": "Úsalo en contextos de normas o deberes como 'work in the office' o 'study English every day'."
+    },
+    "Modal: may": {
+        "meaning": "Probabilidad futura moderada (50% de duda: 'tal vez / puede que') o permiso formal.",
+        "when_to_use": "Elígelo cuando NO estés seguro de si algo pasará o cuando pidas permiso en un entorno formal o profesional ('May I...?').",
+        "translation_guide": "En afirmaciones de probabilidad equivale a 'puede que... / tal vez...'; en preguntas con 'I/We' traduce '¿Puedo / Podemos (formalmente)...?'.",
+        "contrast": "Nunca uses 'may' para habilidades (no digas 'I may swim' para decir que sabes nadar; usa 'can').",
+        "coherent_tip": "Excelente para planes posibles: 'travel to Orlando next month' o 'buy a new car'."
+    },
+    "Modal: might": {
+        "meaning": "Probabilidad baja o remota (30% de certeza: 'quizás / a lo mejor podría').",
+        "when_to_use": "Elígelo cuando una idea sea todavía más incierta o lejana que con 'may'.",
+        "translation_guide": "Se traduce como 'podría (quizás) / tal vez...' indicando duda.",
+        "contrast": "En preguntas casi no se usa; para preguntar por posibilidades es preferible usar 'can' o 'could'.",
+        "coherent_tip": "Combínalo con acciones futuras posibles como 'visit with my family' o 'buy a new book'."
+    },
+    "Modal: would": {
+        "meaning": "Condicional en español (terminación '-ría' en el verbo) u ofrecimientos/peticiones corteses.",
+        "when_to_use": "Elígelo para situaciones hipotéticas ('Yo viajaría...') o preguntas educadas ('Would you...?' = ¿Te gustaría / Harías...?).",
+        "translation_guide": "Convierte el verbo principal al condicional: 'would speak' = hablaría, 'would travel' = viajaría, 'would eat' = comería.",
+        "contrast": "No indica obligación ni capacidad por sí mismo, sino deseo o condición hipotética.",
+        "coherent_tip": "Pruébalo con cualquier verbo de acción: 'travel to Orlando next month' (viajaría a Orlando el próximo mes)."
+    },
+    "Modal: shall": {
+        "meaning": "Sugerencia formal u ofrecimiento cortés (usado casi siempre con 'I' o 'We').",
+        "when_to_use": "Elígelo principalmente en preguntas con 'I' o 'We' para proponer un plan ('Shall we go?' = ¿Vamos? / ¿Qué tal si vamos?).",
+        "translation_guide": "Se traduce como '¿Propongo que...? / Deberemos...'.",
+        "contrast": "Con sujetos como He, She, They o You suena anticuado o de contrato legal; con esos sujetos prefiere 'will' o 'should'.",
+        "coherent_tip": "Selecciona el sujeto 'We' o 'I' en el Bloque 1 para crear una oración 100% natural."
+    },
+    "Semimodal: have to": {
+        "meaning": "Obligación externa impuesta por horarios, trabajo, normas o circunstancias ('tener que').",
+        "when_to_use": "Elígelo cuando la obligación venga de afuera (el jefe, la universidad, una cita) y no de un deseo propio.",
+        "translation_guide": "Se traduce literalmente como 'tengo que / tienes que / tiene que / tenemos que / tienen que'.",
+        "contrast": "A diferencia de 'must', SÍ cambia a 'has to' con He/She/It y usa 'do/does' en negativa y pregunta. En negativa ('don't/doesn't have to') significa 'NO es necesario (es opcional)'.",
+        "coherent_tip": "Combínalo con responsabilidades cotidianas como 'work in the office' o 'drive a new car'."
+    },
+    "Semimodal: need to": {
+        "meaning": "Necesidad práctica o requisito para lograr un objetivo ('necesitar hacer algo').",
+        "when_to_use": "Elígelo cuando quieras expresar que algo es necesario o conveniente para el sujeto.",
+        "translation_guide": "Se traduce como 'necesito / necesitas / necesita / necesitamos / necesitan' + verbo.",
+        "contrast": "Es un semimodal: lleva '-s' en 3.ª persona singular ('He needs to...') y requiere 'do / does' para negar y preguntar.",
+        "coherent_tip": "Muy útil con 'study English every day', 'eat healthy food' o 'buy a new car'."
+    },
+    "Semimodal: used to": {
+        "meaning": "Hábito o costumbre del pasado que ya NO ocurre en el presente ('solía...').",
+        "when_to_use": "Elígelo para contrastar tu vida de antes con la de ahora (ej. 'Yo solía vivir allá, pero ya no').",
+        "translation_guide": "Se traduce como 'solía / solías / solíamos / solían' + verbo en infinitivo.",
+        "contrast": "En afirmativa lleva '-d' (used to), pero en negativa (did not use to) y pregunta (Did ... use to?) pierde la '-d' por efecto del auxiliar 'did'.",
+        "coherent_tip": "Evita complementos de futuro como 'next month'. Úsalo con 'live at home', 'work in the office' o 'play with my family'."
+    },
+    "Semimodal: be able to": {
+        "meaning": "Ser capaz de / lograr hacer algo (sustituto formal y flexible de 'can').",
+        "when_to_use": "Elígelo cuando quieras enfatizar la capacidad de lograr algo. Además, permite expresarse en todos los tiempos donde 'can' no existe.",
+        "translation_guide": "Se traduce como 'soy / eres / es / somos / son capaz (capaces) de' + verbo.",
+        "contrast": "Se conjuga a través del verbo To Be (am / is / are able to) y no utiliza 'do / does'.",
+        "coherent_tip": "Combínalo con retos o habilidades como 'speak English every day' o 'drive very fast'."
+    },
+    "To Be (Presente: am/is/are)": {
+        "meaning": "Identidad, profesión, estado de ánimo, característica o ubicación actual ('ser o estar').",
+        "when_to_use": "Elígelo cuando NO vayas a usar un verbo de acción en base, sino para describir cómo está alguien o dónde se encuentra hoy.",
+        "translation_guide": "Se traduce simultáneamente como 'soy/estoy', 'eres/estás', 'es/está', 'somos/estamos', 'son/están'.",
+        "contrast": "Es autosuficiente: jamás usa 'do/does' ni se combina con verbos en forma base (no digas 'He is work'). En el bloque 3 selecciona '(ninguno - para To Be / Have)'.",
+        "coherent_tip": "Deja el Bloque 3 en '(ninguno)' y elige en el Bloque 4 un estado o lugar: 'happy', 'ready for the trip', 'at home' o 'in the office'."
+    },
+    "To Be (Pasado: was/were)": {
+        "meaning": "Estado de ánimo, condición o ubicación en el pasado ('era / estaba / fue / estuvo').",
+        "when_to_use": "Elígelo para describir dónde estaba o cómo se sentía alguien en el pasado.",
+        "translation_guide": "Usa 'was' para I, He, She, It ('estaba/era') y 'were' para You, We, They ('estaban/éramos/eran').",
+        "contrast": "No utiliza el auxiliar 'did'. Se niega con 'was not / were not' y se pregunta invirtiendo 'Was / Were' al inicio.",
+        "coherent_tip": "Deja el Bloque 3 en '(ninguno)' y usa complementos de estado o lugar como 'happy', 'at home' o 'in the office'."
+    },
+    "Have (Presente Simple: have/has)": {
+        "meaning": "Posesión de objetos, tiempo, relaciones o características ('tener').",
+        "when_to_use": "Elígelo cuando quieras decir que alguien posee algo (un auto, un libro, tiempo libre). Para obligación ('tener que hacer algo'), usa 'Semimodal: have to'.",
+        "translation_guide": "Se traduce como 'tengo / tienes / tiene / tenemos / tienen'.",
+        "contrast": "En afirmativa cambia a 'has' con He/She/It (She has a new car), pero en negativa (doesn't have) y pregunta (Does she have...?) usa el auxiliar 'do/does' y regresa a 'have'.",
+        "coherent_tip": "Deja el Bloque 3 en '(ninguno)' y selecciona un objeto poseíble en el Bloque 4: 'a new car', 'a new book', 'time today' o 'healthy food'."
+    }
+}
+
 VOCABULARY_BANK = [
     # Viajes y Aeropuerto
     {"en": "Boarding pass", "ipa": "/ˈbɔːr.dɪŋ ˌpæs/", "phonetic": "bór-ding pas", "es": "Pase de abordar", "cat": "Viajes y Aeropuerto", "icon": "🎫", "color": "#2563eb", "example_en": "Please show your boarding pass at the gate.", "example_es": "Por favor muestre su pase de abordar en la puerta."},
@@ -1394,7 +1542,15 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
 
         modal_es = MODALS_CONJ_ES[modal][person]
         v_es = "ser / estar" if verb_base == "be" else VERBS_DB.get(verb_base, {}).get("es_inf", verb_base)
-        es_trans = cap_first(f"{prof['es']} {modal_es} {v_es} {c_es}.")
+        if modal == "would" and verb_base in VERBS_DB:
+            cond_v = VERBS_DB[verb_base]["es_cond_map"][person]
+            es_trans = cap_first(f"{prof['es']} {cond_v} {c_es}.")
+        elif modal == "may":
+            es_trans = cap_first(f"Puede que {prof['es'].lower()} ({modal_es} formalmente) {v_es} {c_es}.")
+        elif modal == "might":
+            es_trans = cap_first(f"Tal vez {prof['es'].lower()} {modal_es} {v_es} {c_es}.")
+        else:
+            es_trans = cap_first(f"{prof['es']} {modal_es} {v_es} {c_es}.")
 
     elif structure_type.startswith("Semimodal:"):
         semi = structure_type.split(":")[1].strip().lower()
@@ -1723,6 +1879,20 @@ with tab_matrix:
             comp_val = st.text_input("Complemento:", value="every morning", placeholder="Ej: in Cali, very well")
         else:
             comp_val = st.selectbox("Selecciona complemento:", options=list(COMPLEMENTS_PRESETS.keys()), index=0)
+
+    # Panel guía en vivo al seleccionar Verbo / Modal / Tiempo
+    ped = STRUCTURE_PEDAGOGY.get(struct_val)
+    if ped:
+        with st.container(border=True):
+            st.markdown(f"##### 🧭 Guía de Uso y Significado: `{struct_val}`")
+            p_col1, p_col2 = st.columns(2)
+            with p_col1:
+                st.markdown(f"- **🎯 Qué expresa en la frase:** {ped['meaning']}")
+                st.markdown(f"- **🗣️ Cuándo elegirla:** {ped['when_to_use']}")
+                st.markdown(f"- **🇪🇸 Cómo se traduce:** {ped['translation_guide']}")
+            with p_col2:
+                st.markdown(f"- **⚖️ Regla / Diferencia clave:** {ped['contrast']}")
+                st.markdown(f"- **💡 Consejo para una frase real:** {ped['coherent_tip']}")
 
     result = build_sentences(subject_val, struct_val, action_val, comp_val)
 
