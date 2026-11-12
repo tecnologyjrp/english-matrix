@@ -2379,16 +2379,29 @@ with tab_shadowing:
         vid_col_player, vid_col_info = st.columns([1.8, 1])
         with vid_col_player:
             # Reproductor YouTube embebido con subtítulos en inglés forzados (cc_load_policy=1 & cc_lang_pref=en)
-            embed_url = f"https://www.youtube.com/embed/{current_vid['video_id']}?cc_load_policy=1&cc_lang_pref=en&hl=en&rel=0"
+            embed_url = f"https://www.youtube.com/embed/{current_vid['video_id']}?enablejsapi=1&cc_load_policy=1&cc_lang_pref=en&hl=en&rel=0"
             st.markdown(
                 f"""
-                <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.12); border:1px solid #cbd5e1;">
-                    <iframe src="{embed_url}"
+                <div id="yt-player-container" style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.12); border:1px solid #cbd5e1;">
+                    <iframe id="yt-iframe" src="{embed_url}"
                         style="position:absolute; top:0; left:0; width:100%; height:100%; border:0;"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                         allowfullscreen>
                     </iframe>
                 </div>
+                <script>
+                // Script para detener el video de YouTube si el usuario cambia de pestaña en Streamlit
+                const observer = new MutationObserver(() => {{
+                    const iframe = document.getElementById('yt-iframe');
+                    if (iframe && iframe.offsetParent === null) {{
+                        iframe.contentWindow.postMessage('{{\"event\":\"command\",\"func\":\"pauseVideo\",\"args\":\"\"}}', '*');
+                    }}
+                }});
+                const container = document.getElementById('yt-player-container');
+                if (container && container.parentNode) {{
+                    observer.observe(container.parentNode, {{ attributes: true, subtree: true, childList: true }});
+                }}
+                </script>
                 """,
                 unsafe_allow_html=True,
             )
