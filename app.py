@@ -363,9 +363,7 @@ if "active_exam" not in st.session_state:
     st.session_state.active_exam = None
 if "last_exam_report" not in st.session_state:
     st.session_state.last_exam_report = None
-if "vocab_batch" not in st.session_state:
-    # Al ingresar a la aplicación, selecciona aleatoriamente un lote fresco de palabras
-    st.session_state.vocab_batch = random.sample(range(len(VOCABULARY_BANK)), 6)
+
 
 # ==============================================================================
 # DICCIONARIOS DE REFERENCIA Y CONJUGACIÓN
@@ -1571,6 +1569,10 @@ def synthesize_shadowing_loop(sentences_list: tuple, slow_mode: bool = False, tl
     combined.seek(0)
     return combined.read()
 
+
+if "vocab_batch" not in st.session_state:
+    # Al ingresar a la aplicación, selecciona aleatoriamente un lote fresco de palabras
+    st.session_state.vocab_batch = random.sample(range(len(VOCABULARY_BANK)), 6)
 
 # ==============================================================================
 # INTERFAZ DE USUARIO (SIDEBAR Y TABS)
