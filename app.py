@@ -456,6 +456,15 @@ MODALS_CONJ_ES = {
     "must": {"1s": "debo", "2s": "debes", "3s": "debe", "1p": "debemos", "3p": "deben"},
     "may": {"1s": "puedo", "2s": "puedes", "3s": "puede", "1p": "podemos", "3p": "pueden"},
     "might": {"1s": "podría", "2s": "podrías", "3s": "podría", "1p": "podríamos", "3p": "podrían"},
+    "would": {"1s": "quisiera", "2s": "querrías", "3s": "querría", "1p": "querríamos", "3p": "querrían"},
+    "shall": {"1s": "deberé / propongo", "2s": "deberás", "3s": "deberá", "1p": "deberemos / propongo", "3p": "deberán"},
+}
+
+SEMIMODALS_ES = {
+    "have to": {"1s": "tengo que", "2s": "tienes que", "3s": "tiene que", "1p": "tenemos que", "3p": "tienen que"},
+    "need to": {"1s": "necesito", "2s": "necesitas", "3s": "necesita", "1p": "necesitamos", "3p": "necesitan"},
+    "used to": {"1s": "solía", "2s": "solías", "3s": "solía", "1p": "solíamos", "3p": "solían"},
+    "be able to": {"1s": "soy capaz de", "2s": "eres capaz de", "3s": "es capaz de", "1p": "somos capaces de", "3p": "son capaces de"},
 }
 
 BE_PRES_ES = {"1s": "estoy", "2s": "estás", "3s": "está", "1p": "estamos", "3p": "están"}
@@ -1040,6 +1049,8 @@ def normalize_english_answer(text: str) -> str:
         .replace("aren't", "are not")
         .replace("shouldn't", "should not")
         .replace("couldn't", "could not")
+        .replace("wouldn't", "would not")
+        .replace("shan't", "shall not")
     )
     return norm
 
@@ -1090,12 +1101,62 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
         neg = cap_first(f"{s_disp} {neg_mod} {verb_base} {comp_clean}.")
         ques = cap_first(f"{modal} {s_lower_for_q} {verb_base} {comp_clean}?")
 
-        notes.append(f"**Regla Modal (`{modal}`):** Nunca cambia en tercera persona (`He {modal}`, nunca *He {modal}s*) y el verbo principal (`{verb_base}`) va siempre en **forma base** sin *to*.")
+        notes.append(f"**Regla Modal Puro (`{modal}`):** Nunca cambia en tercera persona (`He {modal}`, nunca *He {modal}s*) y el verbo principal (`{verb_base}`) va siempre en **forma base** sin *to*.")
         notes.append(f"**Pregunta:** Se invierte el modal antes del sujeto (`{modal.capitalize()} {s_lower_for_q}...`), sin usar *do/does*.")
+        if modal == "must":
+            notes.append("**`must` vs `have to`:** `must` expresa obligación interna o regla estricta; en negativa (`must not`) significa **prohibición**, mientras que `don't/doesn't have to` significa **ausencia de obligación** (es opcional).")
+        elif modal == "would":
+            notes.append("**Uso de `would`:** Forma el condicional (*-ría*) y se usa para peticiones muy corteses (`Would you...`) u ofrecimientos.")
+        elif modal == "shall":
+            notes.append("**Uso de `shall`:** Muy usado con `I` o `We` para sugerencias formales u ofrecimientos (`Shall we go?`).")
 
         modal_es = MODALS_CONJ_ES[modal][person]
         v_es = "ser / estar" if verb_base == "be" else VERBS_DB.get(verb_base, {}).get("es_inf", verb_base)
         es_trans = cap_first(f"{prof['es']} {modal_es} {v_es} {c_es}.")
+
+    elif structure_type.startswith("Semimodal:"):
+        semi = structure_type.split(":")[1].strip().lower()
+        verb_base = action_clean if action_clean else "work"
+        if verb_base in ("am", "is", "are", "was", "were"):
+            verb_base = "be"
+
+        is_3s = prof["person"] == "3s"
+        v_es = "ser / estar" if verb_base == "be" else VERBS_DB.get(verb_base, {}).get("es_inf", verb_base)
+        semi_es = SEMIMODALS_ES[semi][person]
+
+        if semi == "have to":
+            aff_semi = "has to" if is_3s else "have to"
+            aux = "does" if is_3s else "do"
+            aff = cap_first(f"{s_disp} {aff_semi} {verb_base} {comp_clean}.")
+            neg = cap_first(f"{s_disp} {aux} not have to {verb_base} {comp_clean}.")
+            ques = cap_first(f"{aux} {s_lower_for_q} have to {verb_base} {comp_clean}?")
+            notes.append(f"**Semimodal `have to`:** A diferencia de `must`, sí se conjuga (`has to` en 3ra persona singular) y necesita **`{aux}`** para negar y preguntar.")
+            notes.append("**Contraste clave con `must`:** En afirmativa ambos indican obligación (*tener que / deber*), pero en negativa `doesn't/don't have to` significa *no tiene que hacerlo (es opcional)*, mientras `must not` significa *está prohibido*.")
+            es_trans = cap_first(f"{prof['es']} {semi_es} {v_es} {c_es}.")
+
+        elif semi == "need to":
+            aff_semi = "needs to" if is_3s else "need to"
+            aux = "does" if is_3s else "do"
+            aff = cap_first(f"{s_disp} {aff_semi} {verb_base} {comp_clean}.")
+            neg = cap_first(f"{s_disp} {aux} not need to {verb_base} {comp_clean}.")
+            ques = cap_first(f"{aux} {s_lower_for_q} need to {verb_base} {comp_clean}?")
+            notes.append(f"**Semimodal `need to`:** Expresa necesidad. Lleva `-s` en 3ra persona singular (**`{aff_semi}`**) y usa el auxiliar **`{aux}`** en negativa y pregunta.")
+            es_trans = cap_first(f"{prof['es']} {semi_es} {v_es} {c_es}.")
+
+        elif semi == "used to":
+            aff = cap_first(f"{s_disp} used to {verb_base} {comp_clean}.")
+            neg = cap_first(f"{s_disp} did not use to {verb_base} {comp_clean}.")
+            ques = cap_first(f"did {s_lower_for_q} use to {verb_base} {comp_clean}?")
+            notes.append("**Semimodal `used to` (Hábitos en el pasado):** Expresa acciones habituales del pasado que ya no ocurren (*solía...*). Al usar **`did`** en negativa o pregunta, pierde la `-d` y queda **`use to`**.")
+            es_trans = cap_first(f"{prof['es']} {semi_es} {v_es} {c_es}.")
+
+        elif semi == "be able to":
+            be_form = prof["be_pres"]
+            aff = cap_first(f"{s_disp} {be_form} able to {verb_base} {comp_clean}.")
+            neg = cap_first(f"{s_disp} {be_form} not able to {verb_base} {comp_clean}.")
+            ques = cap_first(f"{be_form} {s_lower_for_q} able to {verb_base} {comp_clean}?")
+            notes.append(f"**Semimodal `be able to`:** Equivalente a `can` (*ser capaz de / poder*) que se conjuga con el verbo `to be` (**`{be_form}`**), lo que permite usarlo también en futuro (`will be able to`) o pasado (`was/were able to`).")
+            es_trans = cap_first(f"{prof['es']} {semi_es} {v_es} {c_es}.")
 
     elif structure_type == "To Be (Presente: am/is/are)":
         be_form = prof["be_pres"]
@@ -1340,6 +1401,12 @@ with tab_matrix:
             "Modal: must",
             "Modal: may",
             "Modal: might",
+            "Modal: would",
+            "Modal: shall",
+            "Semimodal: have to",
+            "Semimodal: need to",
+            "Semimodal: used to",
+            "Semimodal: be able to",
             "To Be (Presente: am/is/are)",
             "To Be (Pasado: was/were)",
             "Have (Presente Simple: have/has)",
@@ -1913,7 +1980,11 @@ with tab_reference:
         """
 | Tipo de Estructura | Auxiliar / Verbo | Regla en Afirmativa (+) | Regla en Negativa (-) | Regla en Pregunta (?) |
 | :--- | :--- | :--- | :--- | :--- |
-| **Modales** (`can`, `could`, `should`, `must`, `may`, `might`) | El mismo modal | `Sujeto + Modal + Verbo Base` | `Sujeto + Modal + not + Verbo Base` | `Modal + Sujeto + Verbo Base?` |
+| **Modales Puros** (`can`, `could`, `should`, `must`, `may`, `might`, `will`, `would`, `shall`) | El mismo modal | `Sujeto + Modal + Verbo Base` | `Sujeto + Modal + not + Verbo Base` | `Modal + Sujeto + Verbo Base?` |
+| **Semimodal `have to`** (Obligación externa) | `do` / `does` | `Sujeto + have/has to + Verbo Base` | `Sujeto + do/does + not + have to + Verbo Base` | `Do/Does + Sujeto + have to + Verbo Base?` |
+| **Semimodal `need to`** (Necesidad) | `do` / `does` | `Sujeto + need/needs to + Verbo Base` | `Sujeto + do/does + not + need to + Verbo Base` | `Do/Does + Sujeto + need to + Verbo Base?` |
+| **Semimodal `used to`** (Hábito pasado) | `did` | `Sujeto + used to + Verbo Base` | `Sujeto + did not use to + Verbo Base` | `Did + Sujeto + use to + Verbo Base?` |
+| **Semimodal `be able to`** (Capacidad) | `am` / `is` / `are` | `Sujeto + am/is/are able to + Verbo Base` | `Sujeto + am/is/are not able to + Verbo Base` | `Am/Is/Are + Sujeto + able to + Verbo Base?` |
 | **To Be (Presente)** | `am` / `is` / `are` | `Sujeto + am/is/are + Comp.` | `Sujeto + am/is/are + not + Comp.` | `Am/Is/Are + Sujeto + Comp.?` |
 | **To Be (Pasado)** | `was` / `were` | `Sujeto + was/were + Comp.` | `Sujeto + was/were + not + Comp.` | `Was/Were + Sujeto + Comp.?` |
 | **Presente Simple** | `do` / `does` | `Sujeto + Verbo (-s en He/She/It)` | `Sujeto + do/does + not + Verbo Base` | `Do/Does + Sujeto + Verbo Base?` |
@@ -1922,3 +1993,24 @@ with tab_reference:
 | **Have (Posesión)** | `have` / `has` (`do`/`does`) | `Sujeto + have/has + Objeto` | `Sujeto + do/does + not + have + Objeto` | `Do/Does + Sujeto + have + Objeto?` |
         """
     )
+
+    st.divider()
+    st.subheader("⚖️ Guía Comparativa: `must` vs `have to` (Caso Clave)")
+    st.markdown(
+        "Aunque ambos expresan obligación (*deber / tener que*), cambian radicalmente de significado al pasar a **negativa** y se comportan distinto gramaticalmente:"
+    )
+    comp_c1, comp_c2 = st.columns(2)
+    with comp_c1:
+        st.info(
+            "**1. `must` (Modal Puro — Obligación interna o norma estricta)**\n\n"
+            "- **Afirmativa:** *She **must** study today.* (Ella debe estudiar hoy — convicción o regla).\n"
+            "- **Negativa (`must not` / `mustn't`):** *She **must not** smoke here.* (**Prohibición estricta**: está prohibido).\n"
+            "- **Gramática:** No lleva `-s` en 3.ª persona y no usa `do/does`."
+        )
+    with comp_c2:
+        st.success(
+            "**2. `have to` (Semimodal — Obligación externa o requisito)**\n\n"
+            "- **Afirmativa:** *She **has to** work tomorrow.* (Ella tiene que trabajar mañana — horario/jefe).\n"
+            "- **Negativa (`doesn't / don't have to`):** *She **does not have to** work tomorrow.* (**Opcionalidad**: no es necesario, puede descansar).\n"
+            "- **Gramática:** Sí cambia a `has to` con *He/She/It* y usa `do/does/did`."
+        )
