@@ -1159,6 +1159,7 @@ with tab_matrix:
 
     with c2:
         st.markdown("**2️⃣ Verbo / Modal / Tiempo**")
+        st.markdown("<div style='height: 36px;'></div>", unsafe_allow_html=True)
         structures = [
             "Presente Simple (do / does)",
             "Pasado Simple (did)",
