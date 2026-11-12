@@ -14,7 +14,7 @@ st.set_page_config(
     page_title="English Sentence Matrix & Shadowing Lab",
     page_icon="🧩",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
 DB_PATH = "english_progress.db"
@@ -251,6 +251,75 @@ def reset_all_db():
 
 
 init_db()
+
+# ==============================================================================
+# ESTILOS RESPONSIVOS PARA MÓVIL Y ESCRITORIO
+# ==============================================================================
+st.markdown(
+    """
+    <style>
+    /* Mejoras táctiles generales */
+    .stButton > button {
+        min-height: 44px;
+        border-radius: 8px;
+        font-weight: 500;
+    }
+
+    /* Pestañas desplazables horizontalmente sin apilarse mal */
+    .stTabs [data-baseweb="tab-list"] {
+        gap: 6px;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        padding-bottom: 4px;
+    }
+    .stTabs [data-baseweb="tab-list"]::-webkit-scrollbar {
+        display: none;
+    }
+    .stTabs [data-baseweb="tab"] {
+        white-space: nowrap;
+        padding: 8px 12px;
+        font-size: 0.92rem;
+    }
+
+    /* Ajustes específicos para pantallas de celular (<= 768px) */
+    @media (max-width: 768px) {
+        .block-container {
+            padding-top: 2.2rem !important;
+            padding-left: 0.85rem !important;
+            padding-right: 0.85rem !important;
+            padding-bottom: 2rem !important;
+        }
+        h1 {
+            font-size: 1.55rem !important;
+            line-height: 1.25 !important;
+        }
+        h2 {
+            font-size: 1.25rem !important;
+        }
+        h3 {
+            font-size: 1.12rem !important;
+            word-break: break-word;
+        }
+        /* Oculta el espaciador vertical de escritorio cuando las columnas se apilan en móvil */
+        .desktop-spacer {
+            display: none !important;
+        }
+        /* Botones más grandes y cómodos para el pulgar */
+        .stButton > button {
+            min-height: 48px !important;
+            font-size: 0.98rem !important;
+        }
+        /* Compactar métricas en pantalla estrecha */
+        [data-testid="stMetricValue"] {
+            font-size: 1.35rem !important;
+        }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 if "current_challenge" not in st.session_state:
     st.session_state.current_challenge = None
@@ -1221,6 +1290,16 @@ st.markdown(
     "presenta **Exámenes Calificados** y conserva todo tu historial en **SQLite**."
 )
 
+with st.expander("🔊 Opciones rápidas de voz (Velocidad y Acento)", expanded=False):
+    q_aud1, q_aud2 = st.columns(2)
+    with q_aud1:
+        quick_slow = st.toggle("🐢 Velocidad lenta / didáctica (0.75x)", value=is_slow, key="mobile_quick_slow")
+        if quick_slow != is_slow:
+            is_slow = quick_slow
+    with q_aud2:
+        st.caption(f"Acento activo: **{accent_choice[0]}** *(cámbialo en el menú lateral `>`)*")
+
+
 tab_matrix, tab_shadowing, tab_exams, tab_practice, tab_progress_db, tab_reference = st.tabs(
     [
         "🎛️ Matriz Interactiva",
@@ -1250,7 +1329,7 @@ with tab_matrix:
 
     with c2:
         st.markdown("**2️⃣ Verbo / Modal / Tiempo**")
-        st.markdown("<div style='height: 36px;'></div>", unsafe_allow_html=True)
+        st.markdown("<div class='desktop-spacer' style='height: 36px;'></div>", unsafe_allow_html=True)
         structures = [
             "Presente Simple (do / does)",
             "Pasado Simple (did)",
