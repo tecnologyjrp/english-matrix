@@ -1883,16 +1883,27 @@ with tab_matrix:
     # Panel guía en vivo al seleccionar Verbo / Modal / Tiempo
     ped = STRUCTURE_PEDAGOGY.get(struct_val)
     if ped:
-        with st.container(border=True):
-            st.markdown(f"##### 🧭 Guía de Uso y Significado: `{struct_val}`")
-            p_col1, p_col2 = st.columns(2)
-            with p_col1:
-                st.markdown(f"- **🎯 Qué expresa en la frase:** {ped['meaning']}")
-                st.markdown(f"- **🗣️ Cuándo elegirla:** {ped['when_to_use']}")
-                st.markdown(f"- **🇪🇸 Cómo se traduce:** {ped['translation_guide']}")
-            with p_col2:
-                st.markdown(f"- **⚖️ Regla / Diferencia clave:** {ped['contrast']}")
-                st.markdown(f"- **💡 Consejo para una frase real:** {ped['coherent_tip']}")
+        st.markdown(
+            f"""
+            <div style="background: linear-gradient(135deg, #eff6ff 0%, #f0f9ff 100%); border: 1px solid #bfdbfe; border-left: 5px solid #2563eb; border-radius: 10px; padding: 14px 18px; margin: 10px 0 14px 0; box-shadow: 0 2px 6px rgba(37, 99, 235, 0.06);">
+                <div style="font-size: 1.05rem; font-weight: 700; color: #1e3a8a; margin-bottom: 10px;">
+                    🧭 Guía de Uso y Significado: <code style="background: #dbeafe; color: #1e40af; padding: 2px 8px; border-radius: 5px; font-weight: 700;">{struct_val}</code>
+                </div>
+                <div style="display: flex; flex-wrap: wrap; gap: 16px; color: #1e293b; font-size: 0.94rem; line-height: 1.5;">
+                    <div style="flex: 1 1 320px;">
+                        <div style="margin-bottom: 6px;">• <strong>🎯 Qué expresa en la frase:</strong> {ped['meaning']}</div>
+                        <div style="margin-bottom: 6px;">• <strong>🗣️ Cuándo elegirla:</strong> {ped['when_to_use']}</div>
+                        <div>• <strong>🇪🇸 Cómo se traduce:</strong> {ped['translation_guide']}</div>
+                    </div>
+                    <div style="flex: 1 1 320px;">
+                        <div style="margin-bottom: 6px;">• <strong>⚖️ Regla / Diferencia clave:</strong> {ped['contrast']}</div>
+                        <div>• <strong>💡 Consejo para una frase real:</strong> {ped['coherent_tip']}</div>
+                    </div>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
 
     result = build_sentences(subject_val, struct_val, action_val, comp_val)
 
