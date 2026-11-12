@@ -985,8 +985,33 @@ EXAM_BANK = [
 ]
 
 # ==============================================================================
-# FUNCIONES DE LÓGICA GRAMATICAL Y CONJUGACIÓN
+# FUNCIONES DE LÓGICA GRAMATICAL, VALIDACIÓN PROFUNDA Y CONJUGACIÓN
 # ==============================================================================
+VERB_COMPATIBILITY = {
+    "work": {"allowed": {"in the office", "at home", "with my family", "very fast", "English every day", "time today"}, "recommended": "in the office"},
+    "study": {"allowed": {"English every day", "in the office", "at home", "with my family", "a new book"}, "recommended": "English every day"},
+    "speak": {"allowed": {"English every day", "in the office", "at home", "with my family", "very fast"}, "recommended": "English every day"},
+    "travel": {"allowed": {"to Orlando next month", "with my family", "very fast"}, "recommended": "to Orlando next month"},
+    "go": {"allowed": {"to Orlando next month", "in the office", "at home", "with my family", "very fast"}, "recommended": "to Orlando next month"},
+    "eat": {"allowed": {"healthy food", "in the office", "at home", "with my family", "very fast"}, "recommended": "healthy food"},
+    "read": {"allowed": {"a new book", "English every day", "in the office", "at home", "with my family", "very fast"}, "recommended": "a new book"},
+    "write": {"allowed": {"a new book", "English every day", "in the office", "at home", "very fast"}, "recommended": "a new book"},
+    "learn": {"allowed": {"English every day", "a new book", "at home", "with my family", "very fast"}, "recommended": "English every day"},
+    "play": {"allowed": {"in the office", "at home", "with my family", "very fast"}, "recommended": "with my family"},
+    "buy": {"allowed": {"a new book", "healthy food", "a new car"}, "recommended": "a new car"},
+    "visit": {"allowed": {"with my family"}, "recommended": "with my family"},
+    "cook": {"allowed": {"healthy food", "at home", "with my family", "very fast"}, "recommended": "healthy food"},
+    "drive": {"allowed": {"a new car", "to Orlando next month", "very fast", "with my family"}, "recommended": "a new car"},
+    "live": {"allowed": {"at home", "with my family", "happy"}, "recommended": "with my family"},
+}
+
+BE_ALLOWED_COMPLEMENTS = {"in the office", "at home", "with my family", "happy", "ready for the trip"}
+HAVE_ALLOWED_COMPLEMENTS = {"a new book", "healthy food", "a new car", "time today"}
+
+PAST_TIME_WORDS = ("yesterday", "last night", "last week", "last month", "last year", "ago")
+FUTURE_TIME_WORDS = ("tomorrow", "next week", "next month", "next year", "soon")
+
+
 def infer_subject_profile(subj_raw: str) -> dict:
     clean = subj_raw.strip()
     cap = clean.capitalize()
@@ -1065,8 +1090,143 @@ def translate_complement_es(comp_clean: str, person: str, is_female_3s: bool = F
     return COMPLEMENTS_PRESETS.get(comp_clean, comp_clean)
 
 
-def build_sentences(subject_str: str, structure_type: str, action_str: str, complement_str: str):
+def validate_sentence_logic_and_grammar(subject_str: str, structure_type: str, action_raw: str, comp_raw: str) -> tuple:
+    """
+    Valida errores estructurales, gramaticales, temporales y de coherencia semántica (lógica).
+    Retorna: (warnings_list, sanitized_action_str)
+    """
     warnings = []
+    subj = subject_str.strip()
+    act = action_raw.strip()
+    act_low = act.lower()
+    comp = comp_raw.strip()
+    comp_low = comp.lower()
+
+    is_to_be = structure_type.startswith("To Be")
+    is_have = structure_type.startswith("Have")
+    needs_action_verb = not (is_to_be or is_have)
+
+    # 1. Validación de Sujeto
+    if not subj:
+        warnings.append("⚠️ **Error de Estructura (Sujeto vacío):** Toda oración en inglés necesita un sujeto explícito (ej. `I`, `She`, `They`). Se usará **`I`** por defecto.")
+
+    # 2. Validación de Verbo en modo libre (to + verbo, gerundio, conjugado o pasado)
+    if act_low.startswith("to ") and len(act_low) > 3:
+        clean_v = act_low[3:].strip()
+        warnings.append(
+            f"⚠️ **Error Gramatical en Acción (`{act}`):** No escribas `to` antes del verbo base porque la estructura (`{structure_type}`) ya maneja sus propios auxiliares/modales. Se corrigió automáticamente a **`{clean_v}`**."
+        )
+        act_low = clean_v
+
+    for base_v, v_data in VERBS_DB.items():
+        if act_low == v_data["3s"]:
+            warnings.append(
+                f"⚠️ **Error de Conjugación (`{act}`):** Ingresaste el verbo conjugado con `-s`. En el bloque **Acción** debes usar siempre la **forma base (`{base_v}`)**; el sistema agrega `-s` solo cuando corresponde."
+            )
+            act_low = base_v
+            break
+        if act_low == v_data["past"] and base_v != v_data["past"]:
+            warnings.append(
+                f"⚠️ **Error de Forma Verbal (`{act}`):** Ingresaste el verbo en pasado. Debes escribir la **forma base (`{base_v}`)** para que las formas negativa e interrogativa no dupliquen el pasado."
+            )
+            act_low = base_v
+            break
+        if act_low == v_data["ing"]:
+            if is_to_be:
+                warnings.append(
+                    f"ℹ️ **Presente/Pasado Continuo detectado (`{act}`):** Al combinar **To Be** con un gerundio (`-ing`), estás formando tiempo continuo (*estar haciendo algo*)."
+                )
+            else:
+                warnings.append(
+                    f"⚠️ **Error Gramatical (`{act}`):** Con `{structure_type}` no se usa el verbo con `-ing` directamente; se requiere la **forma base (`{base_v}`)**."
+                )
+                act_low = base_v
+            break
+
+    # 3. Falta de verbo en estructuras que exigen acción
+    if needs_action_verb and not act_low:
+        warnings.append(
+            f"⚠️ **Error de Estructura (Falta el verbo de acción):** La estructura **`{structure_type}`** exige un verbo principal en el bloque **3️⃣ Acción** (ej. `work`, `speak`, `travel`). No puedes elegir *(ninguno)* aquí."
+        )
+
+    # 4. Incompatibilidad de To Be / Have con verbos base
+    if is_to_be and act_low and not act_low.endswith("ing"):
+        warnings.append(
+            f"⚠️ **Error Gramatical (`To Be` + `{act_low}`):** En inglés no se puede juntar el verbo **To Be (`am/is/are/was/were`)** con otro verbo en forma base (`{act_low}`). "
+            f"Para usar **To Be**, selecciona **`(ninguno - para To Be / Have)`** en el bloque 3, o cambia el bloque 2 a **Presente Simple / Modal**."
+        )
+    if is_have and act_low:
+        warnings.append(
+            f"⚠️ **Error Gramatical (`Have` de posesión + verbo `{act_low}`):** Cuando usas **`Have (have/has)`** para indicar posesión (*tener algo*), en el bloque 3 debes elegir **`(ninguno - para To Be / Have)`** y poner un objeto en el complemento (ej. `a new car`, `a new book`). Si quieres decir *'tener que {act_low}'*, elige **`Semimodal: have to`** en el bloque 2."
+        )
+
+    # 5. Coherencia Temporal (Pasado vs Expresiones de Futuro y viceversa)
+    is_past_struct = ("Pasado" in structure_type) or ("used to" in structure_type)
+    is_future_struct = "Futuro" in structure_type
+
+    if is_past_struct and any(fw in comp_low for fw in FUTURE_TIME_WORDS):
+        warnings.append(
+            f"⚠️ **Error de Lógica Temporal (Pasado + Futuro):** Estás usando una estructura en **pasado (`{structure_type}`)** con un complemento de **futuro (`{comp}`)**. "
+            f"Cambia el tiempo a **Futuro Simple (`will`)** o usa una expresión de pasado (ej. *yesterday*, *last month*)."
+        )
+    if is_future_struct and any(pw in comp_low for pw in PAST_TIME_WORDS):
+        warnings.append(
+            f"⚠️ **Error de Lógica Temporal (Futuro + Pasado):** Estás usando **Futuro (`will`)** con una expresión de tiempo **pasado (`{comp}`)**."
+        )
+    if ("Presente" in structure_type or is_have) and any(pw in comp_low for pw in PAST_TIME_WORDS):
+        warnings.append(
+            f"⚠️ **Error de Lógica Temporal (Presente + Pasado):** Estás combinando una estructura en **presente** con una expresión de **pasado (`{comp}`)**."
+        )
+
+    # 6. Coherencia Semántica / Lógica entre Estructura, Acción y Complemento
+    if is_to_be and not act_low.endswith("ing") and comp in COMPLEMENTS_PRESETS:
+        if comp not in BE_ALLOWED_COMPLEMENTS:
+            warnings.append(
+                f"⚠️ **Error de Lógica Semántica (`To Be` + `{comp}`):** Decir *'{subj} is/are {comp}'* no tiene sentido lógico en inglés. "
+                f"Con **To Be** debes usar un estado, adjetivo o lugar como **`happy`**, **`ready for the trip`**, **`at home`** o **`in the office`**."
+            )
+
+    if is_have and comp in COMPLEMENTS_PRESETS:
+        if comp not in HAVE_ALLOWED_COMPLEMENTS:
+            warnings.append(
+                f"⚠️ **Error de Lógica Semántica (`Have` + `{comp}`):** Con el verbo **Have (tener)** el complemento debe ser un sustantivo u objeto poseíble como **`a new car`**, **`a new book`**, **`time today`** o **`healthy food`** (no *'{comp}'*)."
+            )
+
+    if needs_action_verb and act_low in VERB_COMPATIBILITY and comp in COMPLEMENTS_PRESETS:
+        allowed_set = VERB_COMPATIBILITY[act_low]["allowed"]
+        rec_comp = VERB_COMPATIBILITY[act_low]["recommended"]
+        if comp not in allowed_set:
+            if comp in ("happy", "ready for the trip"):
+                warnings.append(
+                    f"⚠️ **Error Gramatical y Lógico (`{act_low}` + `{comp}`):** `{comp}` es un adjetivo/estado que requiere el verbo **To Be**, no el verbo de acción `{act_low}`. "
+                    f"Con **`{act_low}`** usa un complemento coherente como **`{rec_comp}`**."
+                )
+            elif act_low in ("go", "travel") and comp in ("in the office", "at home") and act_low == "travel":
+                warnings.append(
+                    f"⚠️ **Error de Preposición / Lógica (`{act_low}` + `{comp}`):** Los verbos de desplazamiento como `{act_low}` requieren destino con `to` (ej. **`to Orlando next month`**), no ubicación estática (`{comp}`)."
+                )
+            else:
+                warnings.append(
+                    f"⚠️ **Error de Lógica / Sentido (`{act_low}` + `{comp}`):** La combinación del verbo **`{act_low}`** (*{VERBS_DB[act_low]['es_inf']}*) con el complemento **`{comp}`** (*{COMPLEMENTS_PRESETS[comp]}*) no tiene coherencia lógica. "
+                    f"Sugerencia para `{act_low}`: selecciona **`{rec_comp}`**."
+                )
+
+    # 7. Caso especial de preposición en go + in the office / at home
+    if needs_action_verb and act_low == "go" and comp in ("in the office", "at home"):
+        warnings.append(
+            f"⚠️ **Error Gramatical de Preposición (`go {comp}`):** Con el verbo **`go`** (*ir*) no se dice `go in the office` ni `go at home`; en inglés lo correcto es **`go to the office`** o **`go home`** (o elegir **`to Orlando next month`**)."
+        )
+
+    # 8. Modal 'shall' con sujetos de 2da o 3ra persona
+    if structure_type == "Modal: shall" and subj.capitalize() not in ("I", "We"):
+        warnings.append(
+            f"ℹ️ **Aviso de Uso (`shall` con `{subj}`):** En inglés moderno, **`shall`** se utiliza casi exclusivamente con **`I`** y **`We`** (para ofrecimientos o sugerencias como *'Shall we go?'*). Con `{subj}` es mucho más natural usar **`will`** o **`should`**."
+        )
+
+    return warnings, act_low
+
+
+def build_sentences(subject_str: str, structure_type: str, action_str: str, complement_str: str):
     notes = []
 
     subj_clean = subject_str.strip() or "I"
@@ -1076,15 +1236,9 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
     s_disp = prof["display"]
     s_lower_for_q = "I" if s_disp == "I" else (s_disp[0].lower() + s_disp[1:] if s_disp in SUBJECTS else s_disp)
 
-    action_clean = action_str.strip().lower()
+    warnings, action_clean = validate_sentence_logic_and_grammar(subject_str, structure_type, action_str, complement_str)
     comp_clean = complement_str.strip()
     c_es = translate_complement_es(comp_clean, person, is_female_3s)
-
-    if structure_type in ("To Be (Presente: am/is/are)", "To Be (Pasado: was/were)") and action_clean in VERBS_DB:
-        warnings.append(
-            f"⚠️ Con **To Be** no se usa un verbo base (`{action_clean}`) directamente; "
-            f"usa un adjetivo/lugar en el complemento (ej. *happy*, *at home*). Se ajustará la estructura."
-        )
 
     aff = neg = ques = ""
     es_trans = ""
@@ -1105,6 +1259,8 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
         notes.append(f"**Pregunta:** Se invierte el modal antes del sujeto (`{modal.capitalize()} {s_lower_for_q}...`), sin usar *do/does*.")
         if modal == "must":
             notes.append("**`must` vs `have to`:** `must` expresa obligación interna o regla estricta; en negativa (`must not`) significa **prohibición**, mientras que `don't/doesn't have to` significa **ausencia de obligación** (es opcional).")
+        elif modal == "may":
+            notes.append("**`may` vs `can`:** `may` se usa para **permiso formal** (*May I...?*) o **probabilidad / duda** (*puede que / tal vez*), pero nunca para habilidades físicas o mentales (para habilidad usa `can`).")
         elif modal == "would":
             notes.append("**Uso de `would`:** Forma el condicional (*-ría*) y se usa para peticiones muy corteses (`Would you...`) u ofrecimientos.")
         elif modal == "shall":
