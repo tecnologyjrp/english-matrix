@@ -96,6 +96,16 @@ def init_db():
             )
             """
         )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS vocab_mastered (
+                word_en TEXT PRIMARY KEY,
+                word_es TEXT NOT NULL,
+                category TEXT NOT NULL,
+                mastered_at TEXT NOT NULL
+            )
+            """
+        )
         conn.commit()
 
 
@@ -239,6 +249,31 @@ def delete_exam_result_db(exam_id: int):
         conn.commit()
 
 
+def mark_vocab_mastered_db(word_en: str, word_es: str, category: str):
+    now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with get_connection() as conn:
+        conn.execute(
+            """
+            INSERT OR REPLACE INTO vocab_mastered (word_en, word_es, category, mastered_at)
+            VALUES (?, ?, ?, ?)
+            """,
+            (word_en, word_es, category, now_str),
+        )
+        conn.commit()
+
+
+def unmark_vocab_mastered_db(word_en: str):
+    with get_connection() as conn:
+        conn.execute("DELETE FROM vocab_mastered WHERE word_en = ?", (word_en,))
+        conn.commit()
+
+
+def load_vocab_mastered() -> dict:
+    with get_connection() as conn:
+        rows = conn.execute("SELECT word_en, word_es, category, mastered_at FROM vocab_mastered ORDER BY mastered_at DESC").fetchall()
+        return {r["word_en"]: dict(r) for r in rows}
+
+
 def reset_all_db():
     now_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     with get_connection() as conn:
@@ -247,6 +282,7 @@ def reset_all_db():
         conn.execute("DELETE FROM shadowing_progress")
         conn.execute("DELETE FROM exercise_logs")
         conn.execute("DELETE FROM exam_results")
+        conn.execute("DELETE FROM vocab_mastered")
         conn.commit()
 
 
@@ -327,6 +363,9 @@ if "active_exam" not in st.session_state:
     st.session_state.active_exam = None
 if "last_exam_report" not in st.session_state:
     st.session_state.last_exam_report = None
+if "vocab_batch" not in st.session_state:
+    # Al ingresar a la aplicación, selecciona aleatoriamente un lote fresco de palabras
+    st.session_state.vocab_batch = random.sample(range(len(VOCABULARY_BANK)), 6)
 
 # ==============================================================================
 # DICCIONARIOS DE REFERENCIA Y CONJUGACIÓN
@@ -777,6 +816,95 @@ SHADOWING_LESSONS = [
 # ==============================================================================
 # BANCO DE PREGUNTAS PARA EXÁMENES (A1, A2, B1, B2)
 # ==============================================================================
+
+# ==============================================================================
+# BANCO DE VOCABULARIO VISUAL (42 PALABRAS CON FONÉTICA, TRADUCCIÓN E ILUSTRACIÓN)
+# ==============================================================================
+VOCABULARY_BANK = [
+    # Viajes y Aeropuerto
+    {"en": "Boarding pass", "ipa": "/ˈbɔːr.dɪŋ ˌpæs/", "phonetic": "bór-ding pas", "es": "Pase de abordar", "cat": "Viajes y Aeropuerto", "icon": "🎫", "color": "#2563eb", "example_en": "Please show your boarding pass at the gate.", "example_es": "Por favor muestre su pase de abordar en la puerta."},
+    {"en": "Luggage", "ipa": "/ˈlʌɡ.ɪdʒ/", "phonetic": "lá-guich", "es": "Equipaje / Maletas", "cat": "Viajes y Aeropuerto", "icon": "🧳", "color": "#2563eb", "example_en": "My luggage is already at the hotel.", "example_es": "Mi equipaje ya está en el hotel."},
+    {"en": "Customs", "ipa": "/ˈkʌs.təmz/", "phonetic": "kás-tomz", "es": "Aduana / Migración", "cat": "Viajes y Aeropuerto", "icon": "🛃", "color": "#2563eb", "example_en": "It took twenty minutes to go through customs.", "example_es": "Tomó veinte minutos pasar por la aduana."},
+    {"en": "Flight attendant", "ipa": "/ˈflaɪt əˌten.dənt/", "phonetic": "fláit a-tén-dant", "es": "Auxiliar de vuelo", "cat": "Viajes y Aeropuerto", "icon": "✈️", "color": "#2563eb", "example_en": "The flight attendant offered us water.", "example_es": "El auxiliar de vuelo nos ofreció agua."},
+    {"en": "Round-trip ticket", "ipa": "/ˌraʊnd ˈtrɪp ˈtɪk.ɪt/", "phonetic": "ráund trip tí-ket", "es": "Tiquete de ida y vuelta", "cat": "Viajes y Aeropuerto", "icon": "🛫", "color": "#2563eb", "example_en": "We bought a round-trip ticket to Orlando.", "example_es": "Compramos un tiquete de ida y vuelta a Orlando."},
+    {"en": "Shuttle bus", "ipa": "/ˈʃʌt.əl ˌbʌs/", "phonetic": "shá-tol bas", "es": "Autobús de traslado", "cat": "Viajes y Aeropuerto", "icon": "🚐", "color": "#2563eb", "example_en": "The resort has a free shuttle bus to the parks.", "example_es": "El complejo tiene un autobús gratuito a los parques."},
+    {"en": "Rental car", "ipa": "/ˈren.təl ˌkɑːr/", "phonetic": "rén-tal kar", "es": "Auto de alquiler", "cat": "Viajes y Aeropuerto", "icon": "🚗", "color": "#2563eb", "example_en": "We picked up the rental car at the airport.", "example_es": "Recogimos el auto de alquiler en el aeropuerto."},
+    {"en": "Roller coaster", "ipa": "/ˈroʊ.lər ˌkoʊ.stər/", "phonetic": "róu-ler kóus-ter", "es": "Montaña rusa", "cat": "Viajes y Aeropuerto", "icon": "🎢", "color": "#2563eb", "example_en": "That roller coaster is super fast!", "example_es": "¡Esa montaña rusa es súper rápida!"},
+    {"en": "Passport", "ipa": "/ˈpæs.pɔːrt/", "phonetic": "pás-port", "es": "Pasaporte", "cat": "Viajes y Aeropuerto", "icon": "🛂", "color": "#2563eb", "example_en": "Keep your passport in a safe place.", "example_es": "Guarda tu pasaporte en un lugar seguro."},
+
+    # Restaurantes y Comida
+    {"en": "Appetizer", "ipa": "/ˈæp.ə.taɪ.zər/", "phonetic": "á-pe-tai-zer", "es": "Entrada / Aperitivo", "cat": "Restaurantes y Comida", "icon": "🥗", "color": "#d97706", "example_en": "Would you like to order an appetizer first?", "example_es": "¿Les gustaría pedir una entrada primero?"},
+    {"en": "Main course", "ipa": "/ˌmeɪn ˈkɔːrs/", "phonetic": "méin kors", "es": "Plato fuerte / principal", "cat": "Restaurantes y Comida", "icon": "🍽️", "color": "#d97706", "example_en": "For the main course, I will have the grilled chicken.", "example_es": "Para el plato fuerte, pediré el pollo a la parrilla."},
+    {"en": "Side dish", "ipa": "/ˈsaɪd ˌdɪʃ/", "phonetic": "sáid dish", "es": "Acompañamiento / Guarnición", "cat": "Restaurantes y Comida", "icon": "🍟", "color": "#d97706", "example_en": "Does it come with a side dish?", "example_es": "¿Viene con algún acompañamiento?"},
+    {"en": "Check / Bill", "ipa": "/tʃek/ • /bɪl/", "phonetic": "chek / bil", "es": "La cuenta", "cat": "Restaurantes y Comida", "icon": "🧾", "color": "#d97706", "example_en": "Could we have the check, please?", "example_es": "¿Nos podría traer la cuenta, por favor?"},
+    {"en": "Tip / Gratuity", "ipa": "/tɪp/ • /ɡrəˈtuː.ə.t̬i/", "phonetic": "tip / gra-tú-i-ti", "es": "Propina", "cat": "Restaurantes y Comida", "icon": "💵", "color": "#d97706", "example_en": "Is the tip included in the bill?", "example_es": "¿Está incluida la propina en la cuenta?"},
+    {"en": "Napkin", "ipa": "/ˈnæp.kɪn/", "phonetic": "náp-kin", "es": "Servilleta", "cat": "Restaurantes y Comida", "icon": "🧻", "color": "#d97706", "example_en": "Can I get some extra napkins, please?", "example_es": "¿Me puede dar unas servilletas extra, por favor?"},
+    {"en": "Refill", "ipa": "/ˈriː.fɪl/", "phonetic": "rí-fil", "es": "Recarga de bebida", "cat": "Restaurantes y Comida", "icon": "🥤", "color": "#d97706", "example_en": "Soft drinks include free refills.", "example_es": "Las gaseosas incluyen recargas gratuitas."},
+    {"en": "Silverware", "ipa": "/ˈsɪl.vər.wer/", "phonetic": "síl-ver-wer", "es": "Cubiertos", "cat": "Restaurantes y Comida", "icon": "🍴", "color": "#d97706", "example_en": "We need another set of silverware.", "example_es": "Necesitamos otro juego de cubiertos."},
+
+    # Hoteles y Compras
+    {"en": "Front desk", "ipa": "/ˈfrʌnt ˌdesk/", "phonetic": "fránt desk", "es": "Recepción del hotel", "cat": "Hoteles y Compras", "icon": "🛎️", "color": "#059669", "example_en": "Leave the room key at the front desk.", "example_es": "Deja la llave de la habitación en la recepción."},
+    {"en": "Housekeeping", "ipa": "/ˈhaʊsˌkiː.pɪŋ/", "phonetic": "jáus-ki-ping", "es": "Servicio de limpieza", "cat": "Hoteles y Compras", "icon": "🧹", "color": "#059669", "example_en": "Call housekeeping for clean towels.", "example_es": "Llama al servicio de limpieza por toallas limpias."},
+    {"en": "Receipt", "ipa": "/rɪˈsiːt/", "phonetic": "ri-sít (la 'p' es muda)", "es": "Recibo / Factura de compra", "cat": "Hoteles y Compras", "icon": "🛍️", "color": "#059669", "example_en": "Keep your receipt in case you want to exchange it.", "example_es": "Guarda tu recibo en caso de que quieras cambiarlo."},
+    {"en": "Fitting room", "ipa": "/ˈfɪt̬.ɪŋ ˌruːm/", "phonetic": "fí-ting rum", "es": "Vestier / Probador", "cat": "Hoteles y Compras", "icon": "👕", "color": "#059669", "example_en": "Where are the fitting rooms?", "example_es": "¿Dónde quedan los probadores?"},
+    {"en": "Discount", "ipa": "/ˈdɪs.kaʊnt/", "phonetic": "dís-kaunt", "es": "Descuento", "cat": "Hoteles y Compras", "icon": "🏷️", "color": "#059669", "example_en": "This outlet store has a fifty percent discount.", "example_es": "Esta tienda outlet tiene un cincuenta por ciento de descuento."},
+    {"en": "Refund", "ipa": "/ˈriː.fʌnd/", "phonetic": "rí-fand", "es": "Reembolso / Devolución", "cat": "Hoteles y Compras", "icon": "💳", "color": "#059669", "example_en": "They gave me a full refund.", "example_es": "Me dieron un reembolso completo."},
+    {"en": "Vacancy", "ipa": "/ˈveɪ.kən.si/", "phonetic": "véi-kan-si", "es": "Disponibilidad de habitaciones", "cat": "Hoteles y Compras", "icon": "🏨", "color": "#059669", "example_en": "Does the hotel have any vacancies tonight?", "example_es": "¿Tiene el hotel habitaciones disponibles esta noche?"},
+    {"en": "Pillow", "ipa": "/ˈpɪl.oʊ/", "phonetic": "pí-lou", "es": "Almohada", "cat": "Hoteles y Compras", "icon": "🛌", "color": "#059669", "example_en": "Could you send two extra pillows to room 305?", "example_es": "¿Podrían enviar dos almohadas extra a la habitación 305?"},
+
+    # Trabajo y Tecnología
+    {"en": "Database backup", "ipa": "/ˈdeɪ.t̬ə.beɪs ˈbæk.ʌp/", "phonetic": "déi-ta-beis bák-ap", "es": "Copia de seguridad de BD", "cat": "Trabajo y Tecnología", "icon": "🗄️", "color": "#7c3aed", "example_en": "The automated database backup runs at midnight.", "example_es": "La copia de seguridad automática corre a medianoche."},
+    {"en": "Deadline", "ipa": "/ˈded.laɪn/", "phonetic": "déd-lain", "es": "Fecha límite de entrega", "cat": "Trabajo y Tecnología", "icon": "⏰", "color": "#7c3aed", "example_en": "We met the project deadline on time.", "example_es": "Cumplimos la fecha límite del proyecto a tiempo."},
+    {"en": "Server downtime", "ipa": "/ˈsɝː.vər ˈdaʊn.taɪm/", "phonetic": "sér-ver dáun-taim", "es": "Tiempo de inactividad del servidor", "cat": "Trabajo y Tecnología", "icon": "🖥️", "color": "#7c3aed", "example_en": "The migration finished with zero server downtime.", "example_es": "La migración terminó con cero tiempo de inactividad."},
+    {"en": "Troubleshooting", "ipa": "/ˈtrʌb.əlˌʃuː.t̬ɪŋ/", "phonetic": "trá-bol-shu-ting", "es": "Diagnóstico y solución de fallos", "cat": "Trabajo y Tecnología", "icon": "🛠️", "color": "#7c3aed", "example_en": "I spent the morning troubleshooting a network issue.", "example_es": "Pasé la mañana solucionando un problema de red."},
+    {"en": "Schedule", "ipa": "/ˈskedʒ.uːl/", "phonetic": "ské-dyul", "es": "Horario / Cronograma / Programar", "cat": "Trabajo y Tecnología", "icon": "📅", "color": "#7c3aed", "example_en": "Let us schedule a quick meeting for tomorrow.", "example_es": "Programemos una reunión rápida para mañana."},
+    {"en": "Network share", "ipa": "/ˈnet.wɝːk ˌʃer/", "phonetic": "nét-work sher", "es": "Carpeta compartida en red", "cat": "Trabajo y Tecnología", "icon": "🌐", "color": "#7c3aed", "example_en": "All files are stored on the Linux network share.", "example_es": "Todos los archivos están en la carpeta compartida de Linux."},
+    {"en": "Update", "ipa": "/ʌpˈdeɪt/", "phonetic": "ap-déit", "es": "Actualizar / Actualización", "cat": "Trabajo y Tecnología", "icon": "🔄", "color": "#7c3aed", "example_en": "We need to update user permissions today.", "example_es": "Necesitamos actualizar los permisos de usuario hoy."},
+    {"en": "Password", "ipa": "/ˈpæs.wɝːd/", "phonetic": "pás-word", "es": "Contraseña", "cat": "Trabajo y Tecnología", "icon": "🔐", "color": "#7c3aed", "example_en": "Never share your administrator password.", "example_es": "Nunca compartas tu contraseña de administrador."},
+
+    # Vida Diaria y Familia
+    {"en": "Countryside", "ipa": "/ˈkʌn.tri.saɪd/", "phonetic": "kán-tri-said", "es": "El campo / Zona rural", "cat": "Vida Diaria y Familia", "icon": "🏡", "color": "#0d9488", "example_en": "We spent the weekend with our family in the countryside.", "example_es": "Pasamos el fin de semana con nuestra familia en el campo."},
+    {"en": "Granddaughter", "ipa": "/ˈɡræn.dɑː.t̬ər/", "phonetic": "grán-do-ter", "es": "Nieta", "cat": "Vida Diaria y Familia", "icon": "👧", "color": "#0d9488", "example_en": "Our granddaughter loves listening to music.", "example_es": "A nuestra nieta le encanta escuchar música."},
+    {"en": "Headphones", "ipa": "/ˈhed.foʊnz/", "phonetic": "jéd-founz", "es": "Audífonos / Auriculares", "cat": "Vida Diaria y Familia", "icon": "🎧", "color": "#0d9488", "example_en": "Use headphones to practice your English shadowing.", "example_es": "Usa audífonos para practicar tu shadowing en inglés."},
+    {"en": "Neighborhood", "ipa": "/ˈneɪ.bər.hʊd/", "phonetic": "néi-bor-jud", "es": "Barrio / Vecindario", "cat": "Vida Diaria y Familia", "icon": "🏘️", "color": "#0d9488", "example_en": "This is a very quiet and safe neighborhood.", "example_es": "Este es un barrio muy tranquilo y seguro."},
+    {"en": "Groceries", "ipa": "/ˈɡroʊ.sər.iz/", "phonetic": "gróu-se-riz", "es": "Mercado / Víveres", "cat": "Vida Diaria y Familia", "icon": "🛒", "color": "#0d9488", "example_en": "We need to buy groceries for dinner.", "example_es": "Necesitamos comprar el mercado para la cena."},
+    {"en": "Weather", "ipa": "/ˈweð.ər/", "phonetic": "wé-der", "es": "Clima / Tiempo atmosférico", "cat": "Vida Diaria y Familia", "icon": "🌤️", "color": "#0d9488", "example_en": "The weather in Cali is warm and sunny.", "example_es": "El clima en Cali es cálido y soleado."},
+    {"en": "Gift / Present", "ipa": "/ɡɪft/ • /ˈprez.ənt/", "phonetic": "guift / pré-zent", "es": "Regalo / Obsequio", "cat": "Vida Diaria y Familia", "icon": "🎁", "color": "#0d9488", "example_en": "We prepared a special birthday gift for her.", "example_es": "Preparamos un regalo de cumpleaños especial para ella."},
+    {"en": "Breakfast", "ipa": "/ˈbrek.fəst/", "phonetic": "brék-fast", "es": "Desayuno", "cat": "Vida Diaria y Familia", "icon": "🥞", "color": "#0d9488", "example_en": "Breakfast is the most important meal of the day.", "example_es": "El desayuno es la comida más importante del día."},
+    {"en": "Gathering", "ipa": "/ˈɡæð.ər.ɪŋ/", "phonetic": "gá-de-ring", "es": "Reunión familiar / Encuentro", "cat": "Vida Diaria y Familia", "icon": "🎉", "color": "#0d9488", "example_en": "We organized a Thanksgiving family gathering.", "example_es": "Organizamos una reunión familiar de Acción de Gracias."},
+]
+
+
+def render_vocab_visual_card(item: dict, is_mastered: bool = False) -> str:
+    """Genera una tarjeta HTML/SVG con ilustración visual integrada para la palabra de vocabulario."""
+    badge_html = (
+        '<span style="background:#dcfce7;color:#166534;padding:3px 9px;border-radius:12px;font-size:0.76rem;font-weight:700;">✅ Aprendida</span>'
+        if is_mastered
+        else f'<span style="background:{item["color"]}18;color:{item["color"]};padding:3px 9px;border-radius:12px;font-size:0.76rem;font-weight:600;">{item["cat"]}</span>'
+    )
+    return f"""
+    <div style="border:1px solid #e2e8f0; border-top:4px solid {item['color']}; border-radius:12px; padding:14px; background:#ffffff; margin-bottom:10px; box-shadow:0 2px 5px rgba(15,23,42,0.04);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+            {badge_html}
+            <span style="font-size:0.8rem; color:#64748b; font-family:monospace;">{item['ipa']}</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:14px; margin:8px 0 10px 0;">
+            <div style="width:68px; height:68px; min-width:68px; border-radius:14px; background:linear-gradient(135deg, {item['color']}22, {item['color']}08); border:1px solid {item['color']}33; display:flex; align-items:center; justify-content:center; font-size:2.3rem;">
+                {item['icon']}
+            </div>
+            <div>
+                <div style="font-size:1.3rem; font-weight:800; color:#0f172a; line-height:1.2;">{item['en']}</div>
+                <div style="font-size:0.9rem; color:#2563eb; font-weight:600; margin-top:2px;">🗣️ Se pronuncia: <code>/{item['phonetic']}/</code></div>
+                <div style="font-size:1.05rem; color:#15803d; font-weight:700; margin-top:3px;">🇪🇸 {item['es']}</div>
+            </div>
+        </div>
+        <div style="background:#f8fafc; border-radius:8px; padding:8px 10px; font-size:0.86rem; color:#334155; border-left:3px solid {item['color']};">
+            <div><strong>Ejemplo:</strong> <em>"{item['example_en']}"</em></div>
+            <div style="color:#64748b; margin-top:2px;">{item['example_es']}</div>
+        </div>
+    </div>
+    """
+
 EXAM_BANK = [
     {
         "id": "ex_01",
@@ -1451,6 +1579,7 @@ stats = load_stats()
 shadowing_map = load_shadowing_progress()
 saved_sentences = load_sentence_history()
 exam_history = load_exam_results()
+vocab_mastered_map = load_vocab_mastered()
 
 with st.sidebar:
     st.title("🧩 English Matrix")
@@ -1487,8 +1616,7 @@ with st.sidebar:
 
     col_s3, col_s4 = st.columns(2)
     col_s3.metric("Exámenes", len(exam_history))
-    passed_exams = len([e for e in exam_history if e["passed"] == 1])
-    col_s4.metric("Aprobados", passed_exams)
+    col_s4.metric("Vocabulario", f"{len(vocab_mastered_map)}/{len(VOCABULARY_BANK)}")
 
     if stats["attempts"] > 0:
         acc = int((stats["score"] / stats["attempts"]) * 100)
@@ -1517,9 +1645,10 @@ with st.expander("🔊 Opciones rápidas de voz (Velocidad y Acento)", expanded=
         st.caption(f"Acento activo: **{accent_choice[0]}** *(cámbialo en el menú lateral `>`)*")
 
 
-tab_matrix, tab_shadowing, tab_exams, tab_practice, tab_progress_db, tab_reference = st.tabs(
+tab_matrix, tab_vocab, tab_shadowing, tab_exams, tab_practice, tab_progress_db, tab_reference = st.tabs(
     [
         "🎛️ Matriz Interactiva",
+        "🖼️ Vocabulario Visual",
         "🎧 Estudio de Shadowing (A1–B2)",
         "📝 Exámenes Calificados",
         "🎯 Práctica Rápida",
@@ -1645,6 +1774,78 @@ with tab_matrix:
         st.markdown("#### 🧠 Análisis y Reglas Gramaticales")
         for note in result["notes"]:
             st.markdown(f"- {note}")
+
+# ------------------------------------------------------------------------------
+# TAB VOCABULARIO VISUAL (ROTACIÓN ALEATORIA AL INGRESAR + IMAGEN + AUDIO + SQLITE)
+# ------------------------------------------------------------------------------
+with tab_vocab:
+    st.subheader("🖼️ Laboratorio de Vocabulario Visual (Rotación Automática)")
+    st.write(
+        "Cada vez que ingresas a la aplicación o presionas **🎲 Traer nuevas palabras aleatorias**, "
+        "el sistema selecciona un grupo diferente de vocabulario con su **ilustración visual**, **pronunciación figurada y fonética (IPA)**, "
+        "**audio nativo**, **traducción al español** y **oración de ejemplo**."
+    )
+
+    v_ctrl1, v_ctrl2, v_ctrl3, v_ctrl4 = st.columns([1.4, 1, 1.1, 1.3], vertical_alignment="bottom")
+    with v_ctrl1:
+        vocab_categories = ["Todas las categorías"] + sorted(list({w["cat"] for w in VOCABULARY_BANK}))
+        sel_vocab_cat = st.selectbox("Filtrar por categoría temática:", options=vocab_categories)
+    with v_ctrl2:
+        batch_size = st.selectbox("Palabras en pantalla:", options=[4, 6, 8, 12], index=1)
+    with v_ctrl3:
+        hide_mastered = st.toggle("Ocultar ya aprendidas", value=False)
+    with v_ctrl4:
+        if st.button("🎲 Traer nuevas palabras aleatorias", type="primary", use_container_width=True):
+            candidate_indices = [
+                i for i, w in enumerate(VOCABULARY_BANK)
+                if (sel_vocab_cat == "Todas las categorías" or w["cat"] == sel_vocab_cat)
+                and (not hide_mastered or w["en"] not in vocab_mastered_map)
+            ]
+            if not candidate_indices:
+                candidate_indices = list(range(len(VOCABULARY_BANK)))
+            st.session_state.vocab_batch = random.sample(candidate_indices, min(batch_size, len(candidate_indices)))
+            st.rerun()
+
+    # Filtrar el lote actual según la categoría o tamaño elegido
+    valid_pool = [
+        i for i, w in enumerate(VOCABULARY_BANK)
+        if (sel_vocab_cat == "Todas las categorías" or w["cat"] == sel_vocab_cat)
+        and (not hide_mastered or w["en"] not in vocab_mastered_map)
+    ]
+
+    if not valid_pool:
+        st.success("🎉 ¡Ya marcaste como aprendidas todas las palabras de esta categoría! Desactiva 'Ocultar ya aprendidas' para repasarlas.")
+    else:
+        # Ajustar lote si cambió el filtro o el número de tarjetas
+        current_indices = [i for i in st.session_state.vocab_batch if i in valid_pool]
+        if len(current_indices) != min(batch_size, len(valid_pool)):
+            current_indices = random.sample(valid_pool, min(batch_size, len(valid_pool)))
+            st.session_state.vocab_batch = current_indices
+
+        st.divider()
+        grid_cols = st.columns(2)
+        for pos, vocab_idx in enumerate(current_indices):
+            item = VOCABULARY_BANK[vocab_idx]
+            is_learned = item["en"] in vocab_mastered_map
+            with grid_cols[pos % 2]:
+                st.markdown(render_vocab_visual_card(item, is_learned), unsafe_allow_html=True)
+                b_col1, b_col2, b_col3 = st.columns([1.1, 1.2, 1.1])
+                with b_col1:
+                    if st.button(f"🔊 Palabra", key=f"voc_w_{vocab_idx}", use_container_width=True):
+                        st.audio(synthesize_speech(item["en"], is_slow, selected_tld), format="audio/mp3", autoplay=True)
+                with b_col2:
+                    if st.button(f"🗣️ Ejemplo", key=f"voc_ex_{vocab_idx}", use_container_width=True):
+                        st.audio(synthesize_speech(item["example_en"], is_slow, selected_tld), format="audio/mp3", autoplay=True)
+                with b_col3:
+                    if is_learned:
+                        if st.button("↩️ Repasar", key=f"voc_unm_{vocab_idx}", use_container_width=True):
+                            unmark_vocab_mastered_db(item["en"])
+                            st.rerun()
+                    else:
+                        if st.button("✅ Aprendida", key=f"voc_mst_{vocab_idx}", use_container_width=True):
+                            mark_vocab_mastered_db(item["en"], item["es"], item["cat"])
+                            st.toast(f"✅ '{item['en']}' guardada como aprendida en SQLite.")
+                            st.rerun()
 
 # ------------------------------------------------------------------------------
 # TAB 2: ESTUDIO DE SHADOWING (BANCO DE 8 LECCIONES A1-B2)
