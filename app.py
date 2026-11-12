@@ -1133,8 +1133,13 @@ def synthesize_speech(text: str, slow_mode: bool = False, tld: str = "com") -> b
 def synthesize_shadowing_loop(sentences_list: tuple, slow_mode: bool = False, tld: str = "com", repeat_each: int = 2) -> bytes:
     """
     Construye una pista continua estilo curso de Shadowing:
-    Pronuncia cada frase N veces con pausas naturales intercaladas.
+    Pronuncia cada frase N veces con pausas reales de silencio MP3 intercaladas.
     """
+    # Frame MP3 silencioso válido (MPEG1 Layer 3, 128kbps, 44100Hz, ~26ms por frame)
+    silent_mp3_frame = b"\xff\xfb\x90\x00" + (b"\x00" * 413)
+    # ~2.5 segundos de silencio acústico limpio (96 frames)
+    silence_block = silent_mp3_frame * 96
+
     combined = io.BytesIO()
     for sentence in sentences_list:
         clean_s = sentence.strip()
@@ -1145,14 +1150,9 @@ def synthesize_shadowing_loop(sentences_list: tuple, slow_mode: bool = False, tl
         tts.write_to_fp(seg_fp)
         seg_bytes = seg_fp.getvalue()
 
-        pause_tts = gTTS(text=". . . . .", lang="en", slow=True, tld=tld)
-        pause_fp = io.BytesIO()
-        pause_tts.write_to_fp(pause_fp)
-        pause_bytes = pause_fp.getvalue()
-
         for _ in range(repeat_each):
             combined.write(seg_bytes)
-            combined.write(pause_bytes)
+            combined.write(silence_block)
 
     combined.seek(0)
     return combined.read()
