@@ -1918,7 +1918,7 @@ with st.sidebar:
     selected_tld = accent_choice[1]
 
     st.divider()
-    st.subheader("🗄️ Progreso Guardado (SQLite)")
+    st.subheader("🗄️ Progreso Guardado")
     col_s1, col_s2 = st.columns(2)
     col_s1.metric("Aciertos", stats["score"])
     completed_lessons_count = len([k for k in shadowing_map if k.startswith("sh_")])
@@ -1936,13 +1936,13 @@ with st.sidebar:
         reset_all_db()
         st.session_state.active_exam = None
         st.session_state.last_exam_report = None
-        st.toast("Base de datos SQLite reiniciada.")
+        st.toast("Progreso reiniciado.")
         st.rerun()
 
 st.title("🧩 Matriz Gramatical, Shadowing y Evaluación", anchor=False)
 st.markdown(
     "Construye oraciones combinando bloques gramaticales, entrénalas en el **Estudio de Shadowing (A1–B2)**, "
-    "presenta **Exámenes Calificados** y conserva todo tu historial en **SQLite**."
+    "presenta **Exámenes Calificados** y conserva todo tu historial."
 )
 
 with st.expander("🔊 Opciones rápidas de voz (Velocidad y Acento)", expanded=False):
@@ -1962,7 +1962,7 @@ tab_matrix, tab_vocab, tab_shadowing, tab_exams, tab_practice, tab_progress_db, 
         "🎧 Estudio de Shadowing (A1–B2)",
         "📝 Exámenes Calificados",
         "🎯 Práctica Rápida",
-        "🗄️ Historial y Progreso SQL",
+        "🗄️ Historial y Progreso",
         "📘 Guía de Estructuras",
     ]
 )
@@ -2091,7 +2091,7 @@ with tab_matrix:
     with c_trans:
         st.markdown("#### 🇪🇸 Referencia en Español (Afirmativa)")
         st.info(f"**Traducción al español:**\n\n{result['spanish']}")
-        if st.button("💾 Guardar oración en SQLite", use_container_width=True):
+        if st.button("💾 Guardar oración", use_container_width=True):
             inserted = save_sentence_db(
                 result["affirmative"],
                 result["negative"],
@@ -2100,7 +2100,7 @@ with tab_matrix:
                 struct_val,
             )
             if inserted:
-                st.toast("✅ Oración guardada en la base de datos SQLite.")
+                st.toast("✅ Oración guardada correctamente.")
                 st.rerun()
             else:
                 st.toast("ℹ️ Esta oración ya estaba guardada en tu base de datos.")
@@ -2179,7 +2179,7 @@ with tab_vocab:
                     else:
                         if st.button("✅ Aprendida", key=f"voc_mst_{vocab_idx}", use_container_width=True):
                             mark_vocab_mastered_db(item["en"], item["es"], item["cat"])
-                            st.toast(f"✅ '{item['en']}' guardada como aprendida en SQLite.")
+                            st.toast(f"✅ '{item['en']}' guardada como aprendida.")
                             st.rerun()
 
 # ------------------------------------------------------------------------------
@@ -2508,10 +2508,10 @@ with tab_shadowing:
             st.success("✅ Grabación lista. Reprodúcela arriba y compárala con el modelo nativo.")
 
     with rec_col2:
-        st.markdown("**Registro persistente en SQLite**")
-        if st.button("🏅 Guardar sesión completada en BD", use_container_width=True):
+        st.markdown("**Registro de progreso**")
+        if st.button("🏅 Guardar sesión completada", use_container_width=True):
             mark_shadowing_db(lesson_id, lesson_title_for_db)
-            st.toast("✅ Progreso de Shadowing guardado en SQLite.")
+            st.toast("✅ Progreso de Shadowing guardado.")
             st.rerun()
 
 # ------------------------------------------------------------------------------
@@ -2519,7 +2519,7 @@ with tab_shadowing:
 # ------------------------------------------------------------------------------
 with tab_exams:
     st.subheader("📝 Exámenes de Evaluación (Gramática, Traducción y Listening)")
-    st.write("Configura un examen por nivel o tema, respóndelo completo y guarda tu nota y revisión detallada en la base de datos SQLite.")
+    st.write("Configura un examen por nivel o tema, respóndelo completo y guarda tu nota y revisión detallada.")
 
     cfg_col1, cfg_col2, cfg_col3, cfg_col4 = st.columns([1.2, 1.3, 1, 1.2])
     with cfg_col1:
@@ -2591,7 +2591,7 @@ with tab_exams:
                     )
                 st.markdown("---")
 
-            submitted_exam = st.form_submit_button("✅ Finalizar Examen, Calificar y Guardar en SQLite", type="primary", use_container_width=True)
+            submitted_exam = st.form_submit_button("✅ Finalizar Examen, Calificar y Guardar", type="primary", use_container_width=True)
 
             if submitted_exam:
                 correct_count = 0
@@ -2643,7 +2643,7 @@ with tab_exams:
     # Mostrar reporte recién calificado
     if st.session_state.last_exam_report is not None:
         rep = st.session_state.last_exam_report
-        st.markdown("### 🏆 Resultado del Examen Guardado en SQLite")
+        st.markdown("### 🏆 Resultado del Examen")
 
         r1, r2, r3, r4 = st.columns(4)
         r1.metric("Examen ID", f"#{rep['id']}")
@@ -2652,7 +2652,7 @@ with tab_exams:
         r4.metric("Estado", "APROBADO ✅" if rep["passed"] else "REPASAR ⚠️")
 
         if rep["passed"]:
-            st.success(f"¡Felicitaciones! Aprobaste el examen con **{rep['percentage']}%** y el resultado ya quedó registrado en SQLite.")
+            st.success(f"¡Felicitaciones! Aprobaste el examen con **{rep['percentage']}%** y el resultado ya quedó registrado.")
         else:
             st.warning(f"Obtuviste **{rep['percentage']}%** (se requiere 70% para aprobar). Revisa las explicaciones abajo y vuelve a intentarlo.")
 
@@ -2667,7 +2667,7 @@ with tab_exams:
 
     # Historial rápido de exámenes guardados dentro de la misma pestaña
     st.divider()
-    st.markdown("### 📊 Historial de Exámenes Presentados (Guardados en SQLite)")
+    st.markdown("### 📊 Historial de Exámenes Presentados")
     latest_exams = load_exam_results()
     if not latest_exams:
         st.info("Aún no has presentado ningún examen. Haz clic en **🚀 Iniciar Nuevo Examen** arriba.")
@@ -2726,7 +2726,7 @@ with tab_practice:
             log_exercise_attempt(ch["es"], ch["en"], user_ans.strip(), is_ok)
 
             if is_ok:
-                st.success(f"🎉 ¡Excelente! Respuesta correcta guardada en SQLite: **{ch['en']}**")
+                st.success(f"🎉 ¡Excelente! Respuesta correcta guardada: **{ch['en']}**")
                 audio_ok = synthesize_speech(ch["en"], is_slow, selected_tld)
                 st.audio(audio_ok, format="audio/mp3")
             else:
@@ -2736,7 +2736,7 @@ with tab_practice:
 # TAB 5: HISTORIAL Y PROGRESO SQL
 # ------------------------------------------------------------------------------
 with tab_progress_db:
-    st.subheader("🗄️ Panel General de Progreso Persistente (SQLite)")
+    st.subheader("🗄️ Panel General de Progreso")
     st.caption(f"Archivo de base de datos local: `{DB_PATH}`")
 
     avg_exam = (
@@ -2766,7 +2766,7 @@ with tab_progress_db:
     st.divider()
     st.markdown("### 📜 Oraciones Guardadas desde la Matriz")
     if not saved_sentences:
-        st.info("Aún no has guardado oraciones. Usa el botón **💾 Guardar oración en SQLite** en la primera pestaña.")
+        st.info("Aún no has guardado oraciones. Usa el botón **💾 Guardar oración** en la primera pestaña.")
     else:
         for row in saved_sentences:
             with st.container(border=True):
