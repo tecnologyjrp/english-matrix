@@ -3,8 +3,6 @@ import re
 import json
 import sqlite3
 import random
-import urllib.request
-import urllib.parse
 from datetime import datetime
 import streamlit as st
 from gtts import gTTS
@@ -1799,11 +1797,7 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
     if comp_es_custom.strip():
         c_es = comp_es_custom.strip()
     else:
-        c_es_preset = translate_complement_es(comp_clean, person, is_female_3s)
-        if c_es_preset == comp_clean and comp_clean not in COMPLEMENTS_PRESETS and comp_clean:
-            c_es = auto_translate_text(comp_clean, "en", "es").lower()
-        else:
-            c_es = c_es_preset
+        c_es = translate_complement_es(comp_clean, person, is_female_3s)
 
     aff = neg = ques = ""
     es_trans = ""
@@ -1832,7 +1826,7 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
             notes.append("**Uso de `shall`:** Muy usado con `I` o `We` para sugerencias formales u ofrecimientos (`Shall we go?`).")
 
         modal_es = MODALS_CONJ_ES[modal][person]
-        v_es = action_es_custom.strip() if action_es_custom.strip() else ("ser / estar" if verb_base == "be" else VERBS_DB.get(verb_base, {}).get("es_inf", auto_translate_text(verb_base, "en", "es").lower()))
+        v_es = action_es_custom.strip() if action_es_custom.strip() else ("ser / estar" if verb_base == "be" else VERBS_DB.get(verb_base, {}).get("es_inf", verb_base))
         if modal == "would" and verb_base in VERBS_DB:
             cond_v = VERBS_DB[verb_base]["es_cond_map"][person]
             es_trans = cap_first(f"{prof['es']} {cond_v} {c_es}.")
@@ -1850,7 +1844,7 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
             verb_base = "be"
 
         is_3s = prof["person"] == "3s"
-        v_es = action_es_custom.strip() if action_es_custom.strip() else ("ser / estar" if verb_base == "be" else VERBS_DB.get(verb_base, {}).get("es_inf", auto_translate_text(verb_base, "en", "es").lower()))
+        v_es = action_es_custom.strip() if action_es_custom.strip() else ("ser / estar" if verb_base == "be" else VERBS_DB.get(verb_base, {}).get("es_inf", verb_base))
         semi_es = SEMIMODALS_ES[semi][person]
 
         if semi == "have to":
@@ -1939,7 +1933,7 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
             notes.append(f"**Presente Simple (`{s_disp}`):** El verbo queda en forma base (**`{verb_base}`**) y se auxilia con **`do`** en negativa e interrogativa.")
 
         v_info = VERBS_DB.get(verb_base, {})
-        v_es = action_es_custom.strip() if action_es_custom.strip() else v_info.get("es_pres_map", {}).get(person, auto_translate_text(verb_base, "en", "es").lower())
+        v_es = action_es_custom.strip() if action_es_custom.strip() else v_info.get("es_pres_map", {}).get(person, verb_base)
         es_trans = cap_first(f"{prof['es']} {v_es} {c_es}.")
 
     elif structure_type == "Pasado Simple (did)":
@@ -1954,7 +1948,7 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
         notes.append(f"**Efecto Imán de `did`:** En negativa (`did not`) y pregunta (`Did...`), el auxiliar absorbe el pasado y el verbo principal regresa a su forma base (**`{verb_base}`**).")
 
         v_info = VERBS_DB.get(verb_base, {})
-        v_es = action_es_custom.strip() if action_es_custom.strip() else v_info.get("es_past_map", {}).get(person, auto_translate_text(verb_base, "en", "es").lower())
+        v_es = action_es_custom.strip() if action_es_custom.strip() else v_info.get("es_past_map", {}).get(person, verb_base)
         es_trans = cap_first(f"{prof['es']} {v_es} {c_es}.")
 
     elif structure_type == "Futuro Simple (will)":
@@ -1976,77 +1970,6 @@ def build_sentences(subject_str: str, structure_type: str, action_str: str, comp
         "warnings": warnings,
         "notes": notes,
     }
-
-
-
-# Diccionario local instantáneo ES <-> EN para verbos comunes y complementos frecuentes
-SPANISH_TO_ENGLISH_VERBS = {
-    "trabajar": "work", "estudiar": "study", "hablar": "speak", "viajar": "travel",
-    "ir": "go", "comer": "eat", "leer": "read", "escribir": "write",
-    "aprender": "learn", "jugar": "play", "comprar": "buy", "visitar": "visit",
-    "cocinar": "cook", "conducir": "drive", "manejar": "drive", "vivir": "live",
-    "hacer": "make", "realizar": "do", "tomar": "take", "beber": "drink",
-    "conseguir": "get", "obtener": "get", "querer": "want", "saber": "know",
-    "conocer": "know", "pensar": "think", "usar": "use", "utilizar": "use",
-    "encontrar": "find", "dar": "give", "decir": "tell", "contar": "tell",
-    "ayudar": "help", "intentar": "try", "probar": "try", "nadar": "swim",
-    "correr": "run", "caminar": "walk", "dormir": "sleep", "abrir": "open",
-    "cerrar": "close", "pagar": "pay", "vender": "sell", "enviar": "send",
-    "recibir": "receive", "escuchar": "listen", "mirar": "watch", "ver": "see",
-    "limpiar": "clean", "lavar": "wash", "bailar": "dance", "cantar": "sing",
-    "enseñar": "teach", "construir": "build", "diseñar": "design", "programar": "code",
-    "reparar": "fix", "arreglar": "fix", "esperar": "wait", "llamar": "call",
-    "entender": "understand", "comprender": "understand", "recordar": "remember",
-    "olvidar": "forget", "empezar": "start", "comenzar": "start", "terminar": "finish",
-    "elegir": "choose", "cambiar": "change", "practicar": "practice", "preparar": "prepare",
-}
-
-ENGLISH_TO_SPANISH_VERBS_EXTRA = {v: k for k, v in SPANISH_TO_ENGLISH_VERBS.items()}
-for _v_en, _v_data in VERBS_DB.items():
-    ENGLISH_TO_SPANISH_VERBS_EXTRA[_v_en] = _v_data["es_inf"]
-
-
-@st.cache_data(show_spinner=False, ttl=86400)
-def auto_translate_text(text: str, source_lang: str, target_lang: str) -> str:
-    """
-    Traduce texto entre español ('es') e inglés ('en').
-    Primero consulta los diccionarios locales instantáneos y luego Google Translate GTX.
-    """
-    clean = text.strip()
-    if not clean:
-        return ""
-    low = clean.lower()
-
-    if source_lang == "es" and target_lang == "en":
-        if low in SPANISH_TO_ENGLISH_VERBS:
-            return SPANISH_TO_ENGLISH_VERBS[low]
-        for en_c, es_c in COMPLEMENTS_PRESETS.items():
-            if low == es_c.lower():
-                return en_c
-    elif source_lang == "en" and target_lang == "es":
-        if low in VERBS_DB:
-            return VERBS_DB[low]["es_inf"]
-        if low in ENGLISH_TO_SPANISH_VERBS_EXTRA:
-            return ENGLISH_TO_SPANISH_VERBS_EXTRA[low]
-        if clean in COMPLEMENTS_PRESETS:
-            return COMPLEMENTS_PRESETS[clean]
-
-    try:
-        url = (
-            "https://translate.googleapis.com/translate_a/single?client=gtx"
-            f"&sl={source_lang}&tl={target_lang}&dt=t&q={urllib.parse.quote(clean)}"
-        )
-        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=4) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-            translated = "".join([part[0] for part in data[0] if part[0]]).strip()
-            if source_lang == "es" and target_lang == "en":
-                # Si es un verbo que Google devuelve como "to swim", limpiamos el "to "
-                if translated.lower().startswith("to ") and len(translated.split()) == 2:
-                    translated = translated[3:].strip()
-            return translated
-    except Exception:
-        return clean
 
 
 @st.cache_data(show_spinner=False)
@@ -2232,34 +2155,17 @@ with tab_matrix:
         is_to_be_or_have = struct_val.startswith(("To Be", "Have"))
         action_es_custom = ""
         if verb_mode:
-            es_verb_query = st.text_input(
-                "🇪🇸 ¿No sabes el verbo en inglés? Escríbelo en español:",
-                value="",
-                placeholder="Ej: nadar, construir, cocinar...",
-                key="es_verb_lookup",
-            )
-            auto_en_verb = ""
-            if es_verb_query.strip():
-                auto_en_verb = auto_translate_text(es_verb_query.strip(), "es", "en").lower()
-                # Si empieza con "to ", quitarlo para dejar forma base
-                if auto_en_verb.startswith("to ") and len(auto_en_verb) > 3:
-                    auto_en_verb = auto_en_verb[3:].strip()
-                st.caption(f"✅ En inglés (forma base): **`{auto_en_verb}`** *(aplicado automáticamente)*")
-
-            default_verb_en = auto_en_verb if auto_en_verb else ("make" if not is_to_be_or_have else "")
             action_val = st.text_input(
-                "🇬🇧 Verbo en inglés (forma base):",
-                value=default_verb_en,
-                placeholder="Ej: make, run, build",
+                "Verbo en forma base:",
+                value="make" if is_to_be_or_have == False else "",
+                placeholder="Ej: make, run, build (opcional en To Be)",
             )
-            auto_es_verb_ref = es_verb_query.strip().lower() if es_verb_query.strip() else (
-                VERBS_DB[action_val.strip().lower()]["es_inf"]
-                if action_val.strip().lower() in VERBS_DB
-                else auto_translate_text(action_val.strip(), "en", "es").lower()
+            action_es_custom = st.text_input(
+                "Traducción al español del verbo (opcional):",
+                value="",
+                placeholder="Ej: hacer",
+                key="custom_verb_es",
             )
-            if action_val.strip():
-                st.caption(f"🇪🇸 Traducción detectada: **{auto_es_verb_ref}**")
-            action_es_custom = auto_es_verb_ref
         else:
             verb_options = ["(ninguno - para To Be / Have)"] + list(VERBS_DB.keys())
             default_v_idx = 0 if is_to_be_or_have else 3
@@ -2271,31 +2177,13 @@ with tab_matrix:
         comp_mode = st.toggle("Escribir complemento libre", key="t_comp")
         comp_es_custom = ""
         if comp_mode:
-            es_comp_query = st.text_input(
-                "🇪🇸 ¿No sabes el complemento en inglés? Escríbelo en español:",
+            comp_val = st.text_input("Complemento:", value="every morning", placeholder="Ej: in Cali, very well")
+            comp_es_custom = st.text_input(
+                "Traducción del complemento (opcional):",
                 value="",
-                placeholder="Ej: en el parque, con mis amigos...",
-                key="es_comp_lookup",
+                placeholder="Ej: todas las mañanas",
+                key="custom_comp_es",
             )
-            auto_en_comp = ""
-            if es_comp_query.strip():
-                auto_en_comp = auto_translate_text(es_comp_query.strip(), "es", "en")
-                st.caption(f"✅ En inglés: **`{auto_en_comp}`** *(aplicado automáticamente)*")
-
-            default_comp_en = auto_en_comp if auto_en_comp else "every morning"
-            comp_val = st.text_input(
-                "🇬🇧 Complemento en inglés:",
-                value=default_comp_en,
-                placeholder="Ej: in Cali, every morning",
-            )
-            auto_es_comp_ref = es_comp_query.strip() if es_comp_query.strip() else (
-                COMPLEMENTS_PRESETS[comp_val.strip()]
-                if comp_val.strip() in COMPLEMENTS_PRESETS
-                else auto_translate_text(comp_val.strip(), "en", "es").lower()
-            )
-            if comp_val.strip():
-                st.caption(f"🇪🇸 Traducción detectada: **{auto_es_comp_ref}**")
-            comp_es_custom = auto_es_comp_ref
         else:
             comp_val = st.selectbox("Selecciona complemento:", options=list(COMPLEMENTS_PRESETS.keys()), index=0)
 
