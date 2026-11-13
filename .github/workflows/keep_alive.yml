@@ -1,0 +1,34 @@
+name: Mantener Streamlit Activo
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  wake-up:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Visitar la app y despertarla si esta en Zzzz
+        run: |
+          npx playwright install chromium
+          node -e '
+          const { chromium } = require("playwright");
+          (async () => {
+            const browser = await chromium.launch();
+            const page = await browser.newPage();
+            await page.goto("https://english-matrix.streamlit.app", { waitUntil: "networkidle", timeout: 60000 });
+            await page.waitForTimeout(5000);
+            const wakeBtn = page.locator("button:has-text(\"Yes, get this app back up\"), button:has-text(\"Sí, vuelvan a poner\")");
+            if (await wakeBtn.count() > 0) {
+              await wakeBtn.first().click();
+              await page.waitForTimeout(15000);
+            }
+            await browser.close();
+          })();
+          '
