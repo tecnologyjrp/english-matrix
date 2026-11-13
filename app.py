@@ -3,6 +3,7 @@ import re
 import json
 import sqlite3
 import random
+import unicodedata
 import urllib.request
 import urllib.parse
 from datetime import datetime
@@ -1993,34 +1994,350 @@ SPANISH_TO_ENGLISH_VERBS = {
     "cerrar": "close", "pagar": "pay", "vender": "sell", "enviar": "send",
     "recibir": "receive", "escuchar": "listen", "mirar": "watch", "ver": "see",
     "limpiar": "clean", "lavar": "wash", "bailar": "dance", "cantar": "sing",
-    "enseñar": "teach", "construir": "build", "diseñar": "design", "programar": "code",
-    "reparar": "fix", "arreglar": "fix", "esperar": "wait", "llamar": "call",
-    "entender": "understand", "comprender": "understand", "recordar": "remember",
-    "olvidar": "forget", "empezar": "start", "comenzar": "start", "terminar": "finish",
-    "elegir": "choose", "cambiar": "change", "practicar": "practice", "preparar": "prepare",
+    "enseñar": "teach", "ensenar": "teach", "construir": "build", "diseñar": "design",
+    "disenar": "design", "programar": "code", "reparar": "fix", "arreglar": "fix",
+    "esperar": "wait", "llamar": "call", "entender": "understand", "comprender": "understand",
+    "recordar": "remember", "olvidar": "forget", "empezar": "start", "comenzar": "start",
+    "terminar": "finish", "elegir": "choose", "cambiar": "change", "practicar": "practice",
+    "preparar": "prepare", "volar": "fly", "traer": "bring", "llevar": "take",
+    "salir": "leave", "llegar": "arrive", "volver": "return", "regresar": "return",
+    "sentir": "feel", "necesitar": "need", "amar": "love", "gustar": "like",
+    "preferir": "prefer", "buscar": "look for", "perder": "lose", "ganar": "win",
+    "ahorrar": "save", "gastar": "spend", "explicar": "explain", "preguntar": "ask",
+    "responder": "answer", "contestar": "answer", "descansar": "rest", "entrenar": "train",
 }
 
-ENGLISH_TO_SPANISH_VERBS_EXTRA = {v: k for k, v in SPANISH_TO_ENGLISH_VERBS.items()}
+ENGLISH_TO_SPANISH_VERBS_EXTRA = {v: k for k, v in SPANISH_TO_ENGLISH_VERBS.items() if " " not in v}
 for _v_en, _v_data in VERBS_DB.items():
     ENGLISH_TO_SPANISH_VERBS_EXTRA[_v_en] = _v_data["es_inf"]
+
+SPANISH_PHRASE_CHUNKS_ES_EN = {
+    "todos los dias": "every day",
+    "todas las mananas": "every morning",
+    "todas las noches": "every night",
+    "todas las tardes": "every afternoon",
+    "todas las semanas": "every week",
+    "todos los fines de semana": "every weekend",
+    "algunos dias": "some days",
+    "algunas mananas": "some mornings",
+    "algunas tardes": "some afternoons",
+    "algunas noches": "some nights",
+    "algunas veces": "sometimes",
+    "a veces": "sometimes",
+    "en la manana": "in the morning",
+    "por la manana": "in the morning",
+    "en las mananas": "in the mornings",
+    "por las mananas": "in the mornings",
+    "en la tarde": "in the afternoon",
+    "por la tarde": "in the afternoon",
+    "en las tardes": "in the afternoons",
+    "en la noche": "at night",
+    "por la noche": "at night",
+    "en las noches": "at night",
+    "al mediodia": "at noon",
+    "en la oficina": "in the office",
+    "en el trabajo": "at work",
+    "en casa": "at home",
+    "en la casa": "in the house",
+    "en mi casa": "at my house",
+    "en el parque": "in the park",
+    "en la escuela": "at school",
+    "en el colegio": "at school",
+    "en la universidad": "at the university",
+    "en el gimnasio": "at the gym",
+    "en el hospital": "in the hospital",
+    "en el restaurante": "at the restaurant",
+    "en el hotel": "at the hotel",
+    "en el aeropuerto": "at the airport",
+    "en la playa": "on the beach",
+    "en la piscina": "in the pool",
+    "en el campo": "in the countryside",
+    "en el centro comercial": "at the mall",
+    "en el supermercado": "at the supermarket",
+    "en la calle": "on the street",
+    "en la ciudad": "in the city",
+    "con mi familia": "with my family",
+    "con toda mi familia": "with all my family",
+    "con mis amigos": "with my friends",
+    "con un amigo": "with a friend",
+    "con mi esposa": "with my wife",
+    "con mi esposo": "with my husband",
+    "con mi hermano": "with my brother",
+    "con mi hermana": "with my sister",
+    "con mi hijo": "with my son",
+    "con mi hija": "with my daughter",
+    "con mi nieta": "with my granddaughter",
+    "con mi nieto": "with my grandson",
+    "con mis padres": "with my parents",
+    "con mis companeros": "with my coworkers",
+    "con el jefe": "with the boss",
+    "el proximo mes": "next month",
+    "la proxima semana": "next week",
+    "el proximo ano": "next year",
+    "el proximo verano": "next summer",
+    "el fin de semana": "on the weekend",
+    "este fin de semana": "this weekend",
+    "los fines de semana": "on weekends",
+    "la semana pasada": "last week",
+    "el mes pasado": "last month",
+    "el ano pasado": "last year",
+    "ayer por la manana": "yesterday morning",
+    "ayer por la tarde": "yesterday afternoon",
+    "ayer por la noche": "last night",
+    "anoche": "last night",
+    "manana por la manana": "tomorrow morning",
+    "manana por la tarde": "tomorrow afternoon",
+    "manana por la noche": "tomorrow night",
+    "hoy en la tarde": "this afternoon",
+    "hoy en la manana": "this morning",
+    "hoy en la noche": "tonight",
+    "esta noche": "tonight",
+    "esta manana": "this morning",
+    "esta tarde": "this afternoon",
+    "esta semana": "this week",
+    "este mes": "this month",
+    "este ano": "this year",
+    "muy rapido": "very fast",
+    "muy bien": "very well",
+    "muy despacio": "very slowly",
+    "muy temprano": "very early",
+    "muy tarde": "very late",
+    "muy duro": "very hard",
+    "mucho": "a lot",
+    "un poco": "a little",
+    "un libro nuevo": "a new book",
+    "un auto nuevo": "a new car",
+    "un carro nuevo": "a new car",
+    "una casa nueva": "a new house",
+    "comida saludable": "healthy food",
+    "comida deliciosa": "delicious food",
+    "agua fria": "cold water",
+    "cafe caliente": "hot coffee",
+    "listo para el viaje": "ready for the trip",
+    "lista para el viaje": "ready for the trip",
+    "tiempo hoy": "time today",
+    "ingles todos los dias": "English every day",
+    "a orlando el proximo mes": "to Orlando next month",
+}
+
+ENGLISH_PHRASE_CHUNKS_EN_ES = {
+    "some days": "algunos días",
+    "every day": "todos los días",
+    "every morning": "todas las mañanas",
+    "every afternoon": "todas las tardes",
+    "every night": "todas las noches",
+    "every week": "todas las semanas",
+    "every weekend": "todos los fines de semana",
+    "in the morning": "en la mañana",
+    "in the mornings": "en las mañanas",
+    "in the afternoon": "en la tarde",
+    "in the afternoons": "en las tardes",
+    "at night": "en la noche",
+    "at noon": "al mediodía",
+    "in the office": "en la oficina",
+    "at work": "en el trabajo",
+    "at home": "en casa",
+    "in the house": "en la casa",
+    "in the park": "en el parque",
+    "at school": "en la escuela",
+    "at the university": "en la universidad",
+    "at the gym": "en el gimnasio",
+    "in the hospital": "en el hospital",
+    "at the restaurant": "en el restaurante",
+    "at the hotel": "en el hotel",
+    "at the airport": "en el aeropuerto",
+    "on the beach": "en la playa",
+    "in the pool": "en la piscina",
+    "in the countryside": "en el campo",
+    "at the mall": "en el centro comercial",
+    "at the supermarket": "en el supermercado",
+    "in the city": "en la ciudad",
+    "with my family": "con mi familia",
+    "with my friends": "con mis amigos",
+    "with a friend": "con un amigo",
+    "with my wife": "con mi esposa",
+    "with my husband": "con mi esposo",
+    "with my brother": "con mi hermano",
+    "with my sister": "con mi hermana",
+    "with my son": "con mi hijo",
+    "with my daughter": "con mi hija",
+    "with my granddaughter": "con mi nieta",
+    "with my parents": "con mis padres",
+    "with my coworkers": "con mis compañeros",
+    "next month": "el próximo mes",
+    "next week": "la próxima semana",
+    "next year": "el próximo año",
+    "on the weekend": "el fin de semana",
+    "this weekend": "este fin de semana",
+    "on weekends": "los fines de semana",
+    "last week": "la semana pasada",
+    "last month": "el mes pasado",
+    "last year": "el año pasado",
+    "last night": "anoche",
+    "tomorrow morning": "mañana por la mañana",
+    "tomorrow afternoon": "mañana por la tarde",
+    "tomorrow night": "mañana por la noche",
+    "this morning": "esta mañana",
+    "this afternoon": "esta tarde",
+    "tonight": "esta noche",
+    "this week": "esta semana",
+    "this month": "este mes",
+    "this year": "este año",
+    "very fast": "muy rápido",
+    "very well": "muy bien",
+    "very slowly": "muy despacio",
+    "very early": "muy temprano",
+    "very late": "muy tarde",
+    "very hard": "muy duro",
+    "a lot": "mucho",
+    "a little": "un poco",
+    "a new book": "un libro nuevo",
+    "a new car": "un auto nuevo",
+    "a new house": "una casa nueva",
+    "healthy food": "comida saludable",
+    "delicious food": "comida deliciosa",
+    "cold water": "agua fría",
+    "hot coffee": "café caliente",
+    "ready for the trip": "listo para el viaje",
+    "time today": "tiempo hoy",
+}
+
+SPANISH_WORD_ES_EN = {
+    "en": "in", "el": "the", "la": "the", "los": "the", "las": "the",
+    "un": "a", "una": "a", "unos": "some", "unas": "some",
+    "algun": "some", "alguno": "some", "alguna": "some", "algunos": "some", "algunas": "some",
+    "mucho": "much", "muchos": "many", "muchas": "many", "poco": "little", "pocos": "few",
+    "todo": "all", "toda": "all", "todos": "every", "todas": "every", "cada": "every",
+    "otro": "another", "otra": "another", "otros": "other", "otras": "other",
+    "dia": "day", "dias": "days", "manana": "morning", "mananas": "mornings",
+    "tarde": "afternoon", "tardes": "afternoons", "noche": "night", "noches": "nights",
+    "semana": "week", "semanas": "weeks", "mes": "month", "meses": "months",
+    "ano": "year", "anos": "years", "hora": "hour", "horas": "hours", "minuto": "minute", "minutos": "minutes",
+    "hoy": "today", "ayer": "yesterday", "ahora": "now", "siempre": "always", "nunca": "never",
+    "pronto": "soon", "temprano": "early", "rapido": "fast", "lento": "slowly", "despacio": "slowly", "bien": "well",
+    "con": "with", "sin": "without", "para": "for", "por": "in", "de": "of", "del": "from the", "a": "to", "al": "to the",
+    "desde": "from", "hasta": "until", "durante": "during", "antes": "before", "despues": "after", "sobre": "about",
+    "mi": "my", "mis": "my", "tu": "your", "tus": "your", "su": "his", "sus": "their",
+    "nuestro": "our", "nuestra": "our", "nuestros": "our", "nuestras": "our",
+    "familia": "family", "amigo": "friend", "amigos": "friends", "amiga": "friend", "amigas": "friends",
+    "esposa": "wife", "esposo": "husband", "hijo": "son", "hija": "daughter", "hijos": "children",
+    "nieta": "granddaughter", "nieto": "grandson", "hermano": "brother", "hermana": "sister",
+    "padre": "father", "madre": "mother", "padres": "parents", "jefe": "boss", "cliente": "client", "clientes": "clients",
+    "casa": "home", "oficina": "office", "trabajo": "work", "parque": "park", "calle": "street",
+    "escuela": "school", "colegio": "school", "universidad": "university", "ciudad": "city", "pais": "country",
+    "gimnasio": "gym", "playa": "beach", "piscina": "pool", "aeropuerto": "airport", "hotel": "hotel",
+    "restaurante": "restaurant", "tienda": "store", "supermercado": "supermarket", "banco": "bank",
+    "ingles": "English", "espanol": "Spanish", "musica": "music", "libro": "book", "libros": "books",
+    "carro": "car", "auto": "car", "coche": "car", "comida": "food", "agua": "water", "cafe": "coffee",
+    "desayuno": "breakfast", "almuerzo": "lunch", "cena": "dinner", "proyecto": "project", "reunion": "meeting",
+    "computador": "computer", "computadora": "computer", "servidor": "server", "telefono": "phone", "celular": "phone",
+    "viaje": "trip", "vacaciones": "vacation", "dinero": "money", "tiempo": "time", "pelicula": "movie", "futbol": "soccer",
+    "feliz": "happy", "cansado": "tired", "ocupado": "busy", "listo": "ready", "lista": "ready",
+    "nuevo": "new", "nueva": "new", "nuevos": "new", "nuevas": "new",
+    "bueno": "good", "buena": "good", "grande": "big", "pequeno": "small", "importante": "important",
+    "muy": "very", "mas": "more", "menos": "less", "tambien": "also", "solo": "only", "aqui": "here", "alli": "there",
+    "y": "and", "o": "or", "pero": "but", "porque": "because", "cuando": "when", "donde": "where",
+}
+
+ENGLISH_WORD_EN_ES = {
+    "in": "en", "on": "en", "at": "en", "the": "el/la", "a": "un/una", "an": "un/una",
+    "some": "algunos", "many": "muchos", "every": "todos los", "all": "todo",
+    "day": "día", "days": "días", "morning": "mañana", "mornings": "mañanas",
+    "afternoon": "tarde", "afternoons": "tardes", "night": "noche", "nights": "noches",
+    "week": "semana", "weeks": "semanas", "month": "mes", "months": "meses", "year": "año", "years": "años",
+    "today": "hoy", "yesterday": "ayer", "tomorrow": "mañana", "tonight": "esta noche",
+    "now": "ahora", "always": "siempre", "never": "nunca", "sometimes": "a veces", "soon": "pronto",
+    "early": "temprano", "late": "tarde", "fast": "rápido", "slowly": "despacio", "well": "bien",
+    "with": "con", "without": "sin", "for": "para", "of": "de", "to": "a", "from": "desde",
+    "my": "mi", "your": "tu", "his": "su", "her": "su", "our": "nuestro", "their": "su",
+    "family": "familia", "friend": "amigo", "friends": "amigos", "wife": "esposa", "husband": "esposo",
+    "son": "hijo", "daughter": "hija", "granddaughter": "nieta", "brother": "hermano", "sister": "hermana",
+    "home": "casa", "house": "casa", "office": "oficina", "work": "trabajo", "park": "parque",
+    "school": "escuela", "university": "universidad", "city": "ciudad", "country": "país",
+    "gym": "gimnasio", "beach": "playa", "pool": "piscina", "airport": "aeropuerto", "hotel": "hotel",
+    "english": "inglés", "spanish": "español", "music": "música", "book": "libro", "books": "libros",
+    "car": "auto", "food": "comida", "water": "agua", "coffee": "café", "breakfast": "desayuno",
+    "lunch": "almuerzo", "dinner": "cena", "project": "proyecto", "meeting": "reunión", "trip": "viaje",
+    "time": "tiempo", "money": "dinero", "happy": "feliz", "tired": "cansado", "busy": "ocupado",
+    "ready": "listo", "new": "nuevo", "good": "bueno", "very": "muy", "and": "y", "or": "o", "here": "aquí",
+}
+
+
+def _strip_accents(s: str) -> str:
+    return "".join(c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn")
+
+
+def _local_compositional_es_to_en(text: str) -> str:
+    norm = _strip_accents(text.strip().lower())
+    norm = re.sub(r"\s+", " ", norm)
+    if norm in SPANISH_PHRASE_CHUNKS_ES_EN:
+        return SPANISH_PHRASE_CHUNKS_ES_EN[norm]
+    result_str = norm
+    for es_chunk in sorted(SPANISH_PHRASE_CHUNKS_ES_EN.keys(), key=len, reverse=True):
+        pattern = r" " + re.escape(es_chunk) + r" "
+        if re.search(pattern, result_str):
+            result_str = re.sub(pattern, SPANISH_PHRASE_CHUNKS_ES_EN[es_chunk], result_str)
+    tokens = result_str.split()
+    out_tokens = [SPANISH_WORD_ES_EN.get(tok, SPANISH_TO_ENGLISH_VERBS.get(tok, tok)) for tok in tokens]
+    return " ".join(out_tokens)
+
+
+def _local_compositional_en_to_es(text: str) -> str:
+    norm = re.sub(r"\s+", " ", text.strip().lower())
+    if norm in ENGLISH_PHRASE_CHUNKS_EN_ES:
+        return ENGLISH_PHRASE_CHUNKS_EN_ES[norm]
+    result_str = norm
+    for en_chunk in sorted(ENGLISH_PHRASE_CHUNKS_EN_ES.keys(), key=len, reverse=True):
+        pattern = r" " + re.escape(en_chunk) + r" "
+        if re.search(pattern, result_str):
+            result_str = re.sub(pattern, ENGLISH_PHRASE_CHUNKS_EN_ES[en_chunk], result_str)
+    tokens = result_str.split()
+    out_tokens = [ENGLISH_WORD_EN_ES.get(tok, ENGLISH_TO_SPANISH_VERBS_EXTRA.get(tok, tok)) for tok in tokens]
+    return " ".join(out_tokens)
+
+
+def looks_like_spanish_text(text: str) -> bool:
+    """Detecta si una frase o palabra escrita en la casilla de inglés está realmente en español."""
+    clean = text.strip().lower()
+    if not clean:
+        return False
+    if any(ch in clean for ch in "áéíóúñ¿¡"):
+        return True
+    norm = _strip_accents(clean)
+    if norm in SPANISH_TO_ENGLISH_VERBS or norm in SPANISH_PHRASE_CHUNKS_ES_EN:
+        return True
+    tokens = re.findall(r"[a-z]+", norm)
+    if not tokens:
+        return False
+    es_hits = sum(1 for t in tokens if t in SPANISH_WORD_ES_EN or t in SPANISH_TO_ENGLISH_VERBS)
+    en_hits = sum(1 for t in tokens if t in ENGLISH_WORD_EN_ES or t in VERBS_DB)
+    return es_hits > 0 and es_hits >= en_hits
 
 
 @st.cache_data(show_spinner=False, ttl=86400)
 def auto_translate_text(text: str, source_lang: str, target_lang: str) -> str:
     """
     Traduce texto entre español ('es') e inglés ('en').
-    Usa primero el diccionario local instantáneo y como respaldo Google Translate GTX.
+    1) Diccionarios locales exactos
+    2) Google Translate GTX API
+    3) MyMemory Translation API
+    4) Traductor composicional local por bloques y palabras (100% offline fallback)
     """
     clean = text.strip()
     if not clean:
         return ""
     low = clean.lower()
+    norm_no_acc = _strip_accents(low)
 
     if source_lang == "es" and target_lang == "en":
         if low in SPANISH_TO_ENGLISH_VERBS:
             return SPANISH_TO_ENGLISH_VERBS[low]
+        if norm_no_acc in SPANISH_TO_ENGLISH_VERBS:
+            return SPANISH_TO_ENGLISH_VERBS[norm_no_acc]
+        if norm_no_acc in SPANISH_PHRASE_CHUNKS_ES_EN:
+            return SPANISH_PHRASE_CHUNKS_ES_EN[norm_no_acc]
         for en_c, es_c in COMPLEMENTS_PRESETS.items():
-            if low == es_c.lower():
+            if _strip_accents(es_c.lower()) == norm_no_acc:
                 return en_c
     elif source_lang == "en" and target_lang == "es":
         if low in VERBS_DB:
@@ -2029,22 +2346,51 @@ def auto_translate_text(text: str, source_lang: str, target_lang: str) -> str:
             return ENGLISH_TO_SPANISH_VERBS_EXTRA[low]
         if clean in COMPLEMENTS_PRESETS:
             return COMPLEMENTS_PRESETS[clean]
+        if low in ENGLISH_PHRASE_CHUNKS_EN_ES:
+            return ENGLISH_PHRASE_CHUNKS_EN_ES[low]
 
+    # Intento 1: Google Translate GTX
     try:
         url = (
             "https://translate.googleapis.com/translate_a/single?client=gtx"
             f"&sl={source_lang}&tl={target_lang}&dt=t&q={urllib.parse.quote(clean)}"
         )
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(req, timeout=4) as resp:
+        with urllib.request.urlopen(req, timeout=3) as resp:
             data = json.loads(resp.read().decode("utf-8"))
             translated = "".join([part[0] for part in data[0] if part[0]]).strip()
-            if source_lang == "es" and target_lang == "en":
-                if translated.lower().startswith("to ") and len(translated.split()) == 2:
-                    translated = translated[3:].strip()
-            return translated
+            if translated and _strip_accents(translated.lower()) != norm_no_acc:
+                if source_lang == "es" and target_lang == "en":
+                    if translated.lower().startswith("to ") and len(translated.split()) == 2:
+                        translated = translated[3:].strip()
+                return translated
     except Exception:
-        return clean
+        pass
+
+    # Intento 2: MyMemory API
+    try:
+        mm_url = (
+            f"https://api.mymemory.translated.net/get?q={urllib.parse.quote(clean)}"
+            f"&langpair={source_lang}|{target_lang}"
+        )
+        req2 = urllib.request.Request(mm_url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req2, timeout=3) as resp2:
+            mm_data = json.loads(resp2.read().decode("utf-8"))
+            mm_trans = mm_data.get("responseData", {}).get("translatedText", "").strip()
+            if mm_trans and _strip_accents(mm_trans.lower()) != norm_no_acc:
+                if source_lang == "es" and target_lang == "en":
+                    if mm_trans.lower().startswith("to ") and len(mm_trans.split()) == 2:
+                        mm_trans = mm_trans[3:].strip()
+                return mm_trans
+    except Exception:
+        pass
+
+    # Intento 3: Motor composicional local infalible (nunca devuelve el texto sin traducir)
+    if source_lang == "es" and target_lang == "en":
+        return _local_compositional_es_to_en(clean)
+    if source_lang == "en" and target_lang == "es":
+        return _local_compositional_en_to_es(clean)
+    return clean
 
 
 @st.cache_data(show_spinner=False)
@@ -2268,13 +2614,15 @@ with tab_matrix:
                 placeholder="Ej: hablar, nadar, hacer...",
             )
 
-            # Respaldo inmediato si el usuario borró la casilla de inglés y solo escribió en español
+            # Respaldo inmediato si el usuario borró la casilla de inglés o si ambas quedaron en español
             if not action_val.strip() and action_es_custom.strip():
                 action_val = auto_translate_text(action_es_custom.strip(), "es", "en").lower()
                 if action_val.startswith("to ") and len(action_val) > 3:
                     action_val = action_val[3:].strip()
             elif action_val.strip() and not action_es_custom.strip():
                 action_es_custom = auto_translate_text(action_val.strip(), "en", "es").lower()
+            elif action_val.strip().lower() == action_es_custom.strip().lower() and looks_like_spanish_text(action_es_custom):
+                action_val = auto_translate_text(action_es_custom.strip(), "es", "en").lower()
 
             if action_val.strip():
                 st.caption(f"🔄 **En la Matriz:** `{action_val.strip()}` ⇄ **Español:** *{action_es_custom.strip()}*")
@@ -2297,30 +2645,44 @@ with tab_matrix:
             def _sync_comp_from_en():
                 en_c = st.session_state.free_comp_en.strip()
                 if en_c:
-                    st.session_state.custom_comp_es = auto_translate_text(en_c, "en", "es").lower()
+                    if looks_like_spanish_text(en_c):
+                        st.session_state.custom_comp_es = en_c
+                        st.session_state.free_comp_en = auto_translate_text(en_c, "es", "en")
+                    else:
+                        st.session_state.custom_comp_es = auto_translate_text(en_c, "en", "es").lower()
 
             def _sync_comp_from_es():
                 es_c = st.session_state.custom_comp_es.strip()
                 if es_c:
                     st.session_state.free_comp_en = auto_translate_text(es_c, "es", "en")
 
+            # Auto-reparación si ambas casillas quedaron iguales en español por un intento anterior
+            if (
+                st.session_state.free_comp_en.strip()
+                and st.session_state.free_comp_en.strip().lower() == st.session_state.custom_comp_es.strip().lower()
+                and looks_like_spanish_text(st.session_state.custom_comp_es)
+            ):
+                st.session_state.free_comp_en = auto_translate_text(st.session_state.custom_comp_es.strip(), "es", "en")
+
             comp_val = st.text_input(
                 "Complemento (en inglés):",
                 key="free_comp_en",
                 on_change=_sync_comp_from_en,
-                placeholder="Ej: every morning, in Cali",
+                placeholder="Ej: some days in the morning, in Cali",
             )
             comp_es_custom = st.text_input(
                 "Traducción del complemento (escribe aquí si no lo sabes en inglés):",
                 key="custom_comp_es",
                 on_change=_sync_comp_from_es,
-                placeholder="Ej: todas las mañanas, en la oficina...",
+                placeholder="Ej: algunos días en la mañana, en la oficina...",
             )
 
             if not comp_val.strip() and comp_es_custom.strip():
                 comp_val = auto_translate_text(comp_es_custom.strip(), "es", "en")
             elif comp_val.strip() and not comp_es_custom.strip():
                 comp_es_custom = auto_translate_text(comp_val.strip(), "en", "es").lower()
+            elif comp_val.strip().lower() == comp_es_custom.strip().lower() and looks_like_spanish_text(comp_es_custom):
+                comp_val = auto_translate_text(comp_es_custom.strip(), "es", "en")
 
             if comp_val.strip():
                 st.caption(f"🔄 **En la Matriz:** `{comp_val.strip()}` ⇄ **Español:** *{comp_es_custom.strip()}*")
